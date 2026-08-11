@@ -1,0 +1,31 @@
+{#{% form_theme form 'bootstrap_5_layout.html.twg' %}#}
+
+{% block _Mission_packages_entry_row %}
+    {{ form_row(form, {attr: stimulus_controller('package').toArray() }) }}
+{% endblock %}
+
+{% block _Mission_packages_entry_aspect_row %}
+    {{ form_row(form, {attr: stimulus_action('package', 'autofill').toArray() }) }}
+{% endblock %}
+
+{% block _Mission_packages_entry_length_row %}
+    {{ form_row(form, {attr: stimulus_target('package', 'length').toArray() }) }}
+{% endblock %}
+
+{% block _Mission_packages_entry_width_row %}
+    {{ form_row(form, {attr: stimulus_target('package', 'width').toArray() }) }}
+{% endblock %}
+
+{% block _Mission_packages_entry_height_row %}
+    {{ form_row(form, {attr: stimulus_target('package', 'height').toArray() }) }}
+{% endblock %}
+
+{% block _Mission_packages_entry_weight_row %}
+    {{ form_row(form, {attr: stimulus_target('package', 'weight').toArray() }) }}
+{% endblock %}
+
+
+
+
+
+

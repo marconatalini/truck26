@@ -1,0 +1,51 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Missions{% endblock %}
+
+{% block main %}
+    <div class="container missions"{{ stimulus_controller('mission') }}>
+        {% if vehicle.plate is defined %}
+            <h2 class="mb-4 text-center"> {{ 'Missions'|trans ~ ': ' ~ vehicle.plate }}</h2>
+        {% else %}
+            <h2 class="mb-4 text-center"> {{ 'unassigned.missions'|trans }}</h2>
+        {% endif %}
+        <div class="row row-cols-1 row-cols-md-3 g-4">
+            {% for mission in missions %}
+                {% if lastDayNumber is defined and lastDayNumber !== mission.scheduledAt|date('d') %}
+                    <h2 class="text-center">{{ mission.scheduledAt|date('d.m.Y') }}</h2>
+                {% endif %}
+                    {{ include('mission/_mission.html.twig') }}
+                {% set lastDayNumber = mission.scheduledAt|date('d') %}
+            {% else %}
+                {% for i in 1..3 %}
+                    {{ include('mission/_empty_mission.html.twig') }}
+                {% endfor %}
+            {% endfor %}
+        </div>
+
+{#        <a href="{{ path('app_mission_map', {id: vehicle.id}) }}" class="btn btn-primary mt-3">{{ 'MapsView'|trans }}</a>#}
+
+        <div class="modal fade" id="confirmModal" tabindex="-1" aria-labelledby="confirmModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="confirmModalLabel">Conferma Operazione</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <p id="modalBodyText" {{ stimulus_target('mission', 'modalText') }}></p>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-outline-secondary me-auto" data-bs-dismiss="modal">Annulla</button>
+                        <button type="button" class="btn btn-success" id="btnConfirmAction"
+                            {{ stimulus_target('mission', 'modalConfirmBtn') }}
+                        >Conferma</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
+
+

@@ -1,0 +1,79 @@
+{% extends 'base.html.twig' %}
+
+{# @var mission App\Entity\Mission #}
+
+{% block main %}
+    <div class="container missions">
+        <h1 class="text-center">Mission #{{ mission.id }}</h1>
+        <table class="table table-striped">
+            <tbody>
+                <tr>
+                    <td><i class="fa-solid fa-truck-fast"></i></td>
+                    {% set place = mission.pickupPlace %}
+                    <td>{{ place.name }}<br>
+                        {{ place.address.addressLine1 }} {{ place.address.addressLine2 }}<br>
+                        {{ place.address.city }} ({{ place.address.province }})<br>
+                    </td>
+                    <td class="align-middle text-center">
+                        {% set destination = [place.address.addressLine1|url_encode, place.address.city|url_encode, place.address.province]|join('+') %}
+                        <a href="https://www.google.com/maps/dir/?api=1&destination={{ destination }}"
+                            target="_blank" rel="noopener">
+                            <i class="fa-solid fa-location-dot fa-2xl" style="color: darkred"></i>
+                        </a>
+                    </td>
+                </tr>
+                {% if mission.express %}
+                <tr class="table-warning">
+                    <td></td>
+                    <td colspan="2" class="text-capitalize">consegna diretta</td>
+                </tr>
+                {% endif %}
+                <tr>
+                    <td><i class="fa-solid fa-flag-checkered"></i></td>
+                    {% set place = mission.deliveryPlace %}
+                    <td>{{ place.name }}<br>
+                        {{ place.address.addressLine1 }} {{ place.address.addressLine2 }}<br>
+                        {{ place.address.city }} ({{ place.address.province }})<br>
+                    </td>
+                    <td class="align-middle text-center">
+                        {% set destination = [place.address.addressLine1|url_encode, place.address.city|url_encode, place.address.province]|join('+') %}
+                        <a href="https://www.google.com/maps/dir/?api=1&destination={{ destination }}"
+                           target="_blank" rel="noopener">
+                            <i class="fa-solid fa-location-dot fa-2xl" style="color: darkred"></i>
+                        </a>
+                    </td>
+                </tr>
+                <tr>
+                    <td><i class="fa-solid fa-cubes"></i></td>
+                    <td colspan="2">
+                        {# @var pack App\Entity\Package #}
+                        {% for package in mission.packages %}
+                            <p>{{ package.quantity }}x {{ package.aspect }} : {{ [package.length, package.width, package.height]|join(' x ') }}(h) da {{ package.weight }} Kg/cad</p>
+                        {% endfor %}
+                    </td>
+                </tr>
+                <tr>
+                    <td><i class="fa-solid fa-file-text"></i></td>
+                    <td colspan="2">{{ mission.note }}</td>
+                </tr>
+                {% for pic in mission.pictures %}
+                <tr>
+                    <td>{{ 'Picture'|trans }} #{{ pic.id }}</td>
+                    <td colspan="2">
+                        <img src="{{ vich_uploader_asset(pic)| imagine_filter('my_thumb') }}" alt="{{ pic.description }}">
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        <div class="d-flex justify-content-between">
+            <a href="{{ path('app_mission_index') }}" class="btn btn-outline-success">{{ 'back.to.index'|trans }}</a>
+            <a href="{{ path('app_mission_add_picture', {id: mission.id}) }}" class="btn btn-outline-secondary"><i class="fa-regular fa-camera"></i></a>
+        </div>
+    </div>
+{% endblock %}
+
+{% block title %}
+
+{% endblock %}
+

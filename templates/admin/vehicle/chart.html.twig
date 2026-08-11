@@ -1,0 +1,18 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Chart {{ vehicle.plate }}{% endblock %}
+
+{% block nav %}{% endblock %}
+
+{% block body %}
+    <div class="container-fluid d-flex flex-column vh-100 justify-content-center align-items-center">
+        {% if chart is defined %}
+            {{ render_chart(chart) }}
+        {% else %}
+            <h1 class="">{{ vehicle.plate }}</h1>
+            <h6 class="text-muted">non ha alcun carico!</h6>
+        {% endif %}
+    </div>
+{% endblock %}
+
+

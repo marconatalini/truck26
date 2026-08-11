@@ -1,0 +1,9 @@
+{% extends "@EasyAdmin/page/content.html.twig" %}
+
+{% block main %}
+    <div class="row row-cols-1 row-cols-md-4 g-4">
+        {% include 'admin/dashboard/_place.html.twig' %}
+        {% include 'admin/dashboard/_mission_html.twig' %}
+        {% include 'admin/dashboard/_driver_logs_html.twig' %}
+    </div>
+{% endblock %}

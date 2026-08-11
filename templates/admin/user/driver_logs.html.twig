@@ -1,0 +1,11 @@
+{% extends '@EasyAdmin/page/content.html.twig' %}
+
+{% block content_title 'Registro di ' ~ driver.username %}
+
+{% block main %}
+    <div {{ stimulus_controller('driver-logs') }}>
+        <div data-url="{{ absolute_url(path('admin_driver_log_detail', {entityId : 1})) }}" {{ stimulus_target('driver-logs', 'viewUrl') }}></div>
+        <div data-url="{{ absolute_url(path('admin_user_driver_logs', {id : driver.id})) }}" {{ stimulus_target('driver-logs', 'eventsUrl') }}></div>
+        <div id="driver-calendar" {{ stimulus_target('driver-logs', 'calendarEl') }}></div>
+    </div>
+{% endblock %}

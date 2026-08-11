@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <style>
+        body { font-family: sans-serif; }
+        .header { text-align: center; color: #333; }
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        th, td { border: 1px solid #ddd; padding: 3px; text-align: left; }
+        .active { background-color: #fff1c8
+        }
+        ul {margin-top: 0; margin-bottom: 1rem}
+        .end-row { border-bottom: 2px solid #3d3d3d}
+        td span {font-size: 0.6rem}
+    </style>
+    <title>PDF {{ vehicle.plate }}</title>
+</head>
+<body>
+<div class="header">
+    <h3>{{ vehicle.plate }} missioni di oggi {{ "now"|date("d/m/Y") }}</h3>
+</div>
+
+<table>
+    <tr class="end-row">
+        <th>Xpres</th>
+        <th>Ritiro</th>
+        <th>Consegna</th>
+        <th>Peso</th>
+        <th>Area</th>
+    </tr>
+    {% for mission in missions %}
+        <tr>
+            <td rowspan="2">{% if mission.express %}X{% endif %}</td>
+            <td class="{% if not mission.picked %}active{% endif %}">{{ mission.pickupPlace.name }}<br>
+                <span>{{ mission.pickupPlace.address.addressLine1 }}
+                {{ mission.pickupPlace.address.city }} ({{ mission.pickupPlace.address.province }})</span>
+            </td>
+            <td class="{% if mission.picked %}active{% endif %}">{{ mission.deliveryPlace.name }}<br>
+                <span>{{ mission.deliveryPlace.address.addressLine1 }}
+                {{ mission.deliveryPlace.address.city }} ({{ mission.deliveryPlace.address.province }})</span>
+            </td>
+            <td>{{ mission.weight }}</td>
+            <td>{{ mission.area }}</td>
+        </tr>
+        <tr class="end-row">
+            <td>
+                <ul>
+                    {% for package in mission.packages %}
+                        <li>N° {{ package.quantity }} {{ package.aspect }}: {{ package.length }} x {{ package.width }} x {{ package.height }}h  </li>
+                    {% endfor %}
+                </ul>
+            </td>
+            <td colspan="3">
+                {{ mission.note }}
+            </td>
+        </tr>
+    {% endfor %}
+</table>
+</body>
+</html>

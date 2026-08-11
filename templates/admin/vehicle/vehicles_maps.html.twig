@@ -1,0 +1,9 @@
+{% extends "@EasyAdmin/page/content.html.twig" %}
+
+{% block main %}
+    <!-- Contenitore Mappa con attributo data-places (JSON) -->
+    <div id="map"
+         data-places='{{ result|json_encode }}'
+        {{ stimulus_controller('vehicle-map') }}
+    ></div>
+{% endblock %}

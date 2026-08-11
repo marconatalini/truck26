@@ -1,0 +1,45 @@
+framework:
+    workflows:
+        mission:
+            type: 'state_machine'
+            marking_store:
+                type: 'method'
+                property: 'status'
+                # The "supports" option is useful only if you are using Twig functions ('workflow_*')
+            supports:
+                - App\Entity\Mission
+            initial_marking: start
+            places:
+                - start
+                - assigned
+                - picked
+                - ready
+                - pending
+                - delivered
+            transitions:
+                assign:
+                    guard: "is_granted('ROLE_ADMIN')"
+                    from: start
+                    to: assigned
+                unassign:
+                    guard: "is_granted('ROLE_ADMIN')"
+                    from: assigned
+                    to: start
+                pickup:
+                    from: assigned
+                    to: picked
+                suspend:
+                    from: [pending, picked]
+                    to: pending
+                load:
+                    guard: "is_granted('ROLE_ADMIN')"
+                    from: [pending, picked]
+                    to: ready
+                unload:
+                    guard: "is_granted('ROLE_ADMIN')"
+                    from: ready
+                    to: pending
+                delivery:
+                    from: ready
+                    to: delivered
+

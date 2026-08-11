@@ -1,0 +1,35 @@
+.form-group.field-collection .accordion-item .form-group {
+    /*align-items: flex-start;*/
+    display: block !important;
+    padding: 12px 0;
+}
+
+.form-group.field-collection .accordion-item label {
+    display: unset !important;
+}
+
+.accordion-body {
+    padding: 0px var(--bs-accordion-body-padding-x);
+}
+
+#map {
+    height: 700px;
+    width: 100%;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+}
+
+#offcanvasMap {
+    width: 50% !important;
+}
+
+iframe#mapFrame{
+    width: 100% !important;
+    height: 100% !important;
+}
+
+iframe#chartFrame{
+    width: 100% !important;
+    height: 100% !important;
+}
+

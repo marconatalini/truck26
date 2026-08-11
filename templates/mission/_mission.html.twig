@@ -1,0 +1,37 @@
+<div class="col">
+    <div class="card h-100 shadow-sm">
+        <div class="card-body">
+            <div class="info-section">
+                <h6 class="text-muted text-end mb-1 text-uppercase small font-weight-bold">{{ 'Mission'|trans }} #{{ mission.id % 1000 }}</h6>
+                <table class="table mb-0">
+                    <tbody>
+                        <tr>
+                            <td><i class="fa-solid fa-truck-fast"></i></td>
+                            <td colspan="3">{{ mission.pickupPlace }}</td>
+                        </tr>
+                        <tr class="{% if mission.express %}table-warning{% endif %}" >
+                            <td><i class="fa-solid fa-flag-checkered"></i></td>
+                            <td colspan="3">{{ mission.deliveryPlace }}</td>
+                        </tr>
+                        <tr>
+                            <td><i class="fa-solid fa-weight-hanging"></i></td>
+                            <td>{{ mission.weight }} kg</td>
+                            <td><i class="fa-solid fa-arrows-up-down-left-right fa-rotate-by" style="--fa-rotate-angle: 45deg;"></i></td>
+                            <td>{{ mission.area }} mq</td>
+
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="card-footer d-flex justify-content-between">
+            <a href="{{ path('app_mission_detail', {id: mission.id}) }}" class="btn btn-outline-secondary">{{ 'view'|trans }}</a>
+            {% for transition in workflow_transitions(mission) %}
+                <a href="{{ path('app_mission_' ~ transition.name, {id: mission.id}) }}" class="btn btn-outline-secondary btn-{{ transition.name }}"
+                   data-bs-target="#confirmModal" data-bs-toggle="modal" data-message="Hai scelto una azione. Procedo?"
+                    {{ stimulus_action('mission', 'modalConfirm') }}
+                >{{ transition.name|trans }}</a>
+            {% endfor %}
+        </div>
+    </div>
+</div>

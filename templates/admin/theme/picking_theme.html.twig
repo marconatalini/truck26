@@ -1,0 +1,38 @@
+{% block multipicking_row %}
+    {% set row_attr = row_attr|merge({
+        class: row_attr.class|default('')  ~ ' mb-2',
+    }) %}
+    {% set field = form.vars.ea_vars.field %}
+        {%- set row_class = row_class|default(row_attr.class|default('mb-3')) -%}
+        <div {% with {attr: row_attr|merge({class: (row_class ~ ((not compound or force_error|default(false)) and not valid ? ' has-error'))|trim})} %}{{ block('attributes') }}{% endwith %}>
+            {{- form_label(form) -}}
+            <div class="form-widget">
+                {% set has_prepend_html = field.prepend_html|default(null) is not null %}
+                {% set has_append_html = field.append_html|default(null) is not null %}
+                {% set has_input_groups = has_prepend_html or has_append_html %}
+
+                {% if has_input_groups %}<div class="input-group">{% endif %}
+                    {% if has_prepend_html %}
+                        <div class="input-group-prepend">
+                            <span class="input-group-text">{{ field.prepend_html|raw }}</span>
+                        </div>
+                    {% endif %}
+
+                    {{ form_widget(form) }}
+
+                    {% if has_append_html %}
+                        <span class="input-group-text">{{ field.append_html|raw }}</span>
+                    {% endif %}
+                    {% if has_input_groups %}</div>{% endif %}
+
+                {% if field.help ?? false %}
+                    <small class="form-text form-help">{{ field.help|trans(label_translation_parameters, translation_domain)|raw }}</small>
+                {% elseif form.vars.help ?? false %}
+                    <small class="form-text form-help">{{ form.vars.help|trans(form.vars.help_translation_parameters, form.vars.translation_domain)|raw }}</small>
+                {% endif %}
+
+                {{- form_errors(form) -}}
+            </div>
+        </div>
+
+{% endblock multipicking_row %}

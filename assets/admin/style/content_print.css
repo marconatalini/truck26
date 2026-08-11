@@ -1,0 +1,17 @@
+@media print {
+    .sidebar-wrapper {
+        display: none !important;
+        width: 0;
+    }
+    aside.content-top {
+        display: none;
+    }
+    .content-body{
+        min-width: 30cm;
+        padding: 0;
+    }
+    /*.customer-estimate tbody {*/
+    /*    page-break-inside: avoid;*/
+    /*    break-inside: avoid;*/
+    /*}*/
+}

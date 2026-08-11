@@ -1,0 +1,17 @@
+{% extends 'base.html.twig' %}
+
+{% block main_class %}d-flex align-items-center justify-content-center vh-100{% endblock %}
+
+{% block main %}
+    <div class="text-center my-auto">
+        <h1 class="display-4 text-danger fw-bold">{{ 'register.not.available'|trans }}</h1>
+        {% if message is defined %}
+            <h3>{{ message|trans }}</h3>
+        {% else %}
+        {% endif %}
+{#        <p class="lead text-muted my-5">Torna alla lista missioni.</p>#}
+        <button onClick="window.location.href=window.location.href" class="btn btn-success mt-4">{{ 'Retry'|trans }}</button>
+    </div>
+{% endblock %}
+
+

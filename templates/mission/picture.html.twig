@@ -1,0 +1,21 @@
+{% extends 'base.html.twig' %}
+
+{# this tag only applies to the forms defined in this template #}
+{% form_theme form 'bootstrap_5_layout.html.twig' %}
+
+{# @var mission App\Entity\Mission #}
+
+{% block body %}
+    <div class="container missions text-center">
+        <h1>Mission #{{ mission.id }}</h1>
+        <h6 class="lead">aggiungi una foto</h6>
+        <div class="mt-5">
+            {{ form(form) }}
+        </div>
+    </div>
+{% endblock %}
+
+{% block title %}
+
+{% endblock %}
+

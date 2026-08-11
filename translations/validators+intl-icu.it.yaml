@@ -1,0 +1,10 @@
+log.overlap.error: >-
+    {category, select,
+        drive       {{driver} ha già una registrazione di "guida" per il giorno { startDate } }
+        holiday       {{driver} ha già una registrazione di "ferie" per il giorno { startDate } }
+        permit       {{driver} ha già una registrazione di "permesso" per il giorno { startDate }}
+        donation       {{driver} ha già una registrazione di "donazione" per il giorno { startDate }}
+        other       {{driver} ha già questa registrazione per il giorno { startDate }}
+    }
+place.not.unique: 'Nome luogo già utilizzato. Aggiungi un suffisso per la filiale'
+address.not.unique: 'Questo indirizzo, comune e provincia sono già registrati.'

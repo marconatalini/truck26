@@ -1,0 +1,7 @@
+{% extends '@!EasyAdmin/crud/index.html.twig' %}
+
+{% block entity_row_attributes %}
+    {% if null === entity.instance.address.coordinates %}
+        data-index-row-warning = "true"
+    {% endif %}
+{% endblock %}

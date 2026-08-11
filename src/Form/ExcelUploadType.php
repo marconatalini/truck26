@@ -1,0 +1,45 @@
+<?php
+
+namespace App\Form;
+
+use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\FileType;
+use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Validator\Constraints\File;
+
+class ExcelUploadType extends AbstractType
+{
+    public function buildForm(FormBuilderInterface $builder, array $options): void
+    {
+        $builder
+            ->add('excel_file', FileType::class, [
+                'label' => 'Seleziona un file Excel (.xlsx, .xls, .ods)',
+                'mapped' => false,
+                'required' => true,
+                'constraints' => [
+                    new File(
+                        maxSize: '10M',
+                        mimeTypes : [
+                            'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', // .xlsx
+                            'application/vnd.ms-excel',                                         // .xls
+                            'application/vnd.oasis.opendocument.spreadsheet',                    // .ods
+                        ],
+                        mimeTypesMessage: 'Carica un file Excel o ODS valido.',
+                    )
+                ],
+            ])
+            ->add('upload', SubmitType::class, [
+                'label' => 'Carica e Valida',
+                'attr' => ['class' => 'btn btn-primary mt-3']
+            ]);
+    }
+
+    public function configureOptions(OptionsResolver $resolver): void
+    {
+        $resolver->setDefaults([
+            // Configure your form options here
+        ]);
+    }
+}

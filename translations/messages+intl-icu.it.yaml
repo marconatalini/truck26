@@ -1,0 +1,181 @@
+VEHICLES: AUTOMEZZI
+VEHICLE: AUTOMEZZO
+I:
+    not:
+        know: 'No, non saprei...'
+    deliver:
+        tomorrow: 'Si, lo consegno domani'
+        today: 'Si, lo consegno oggi'
+back:
+    to:
+        missions: 'Torna alle missioni'
+        index: "Torna all'indice"
+
+novehicle.avaible: 'Nessun mezzo disponibile'
+register.not.available: 'Nessun mezzo assegnato'
+province.help: 'Solo 2 lettere, esempio VR, BS, VI ecc...'
+coordinates.help: 'Compila questo campo se Tuck26 non trova le coordinate da solo'
+pending.filter.label: 'Missioni in corso'
+coordinates.filter.label: 'Luoghi senza coordinate'
+unmapped.place.coords: 'Luoghi senza coordinate'
+all.place.mapped: 'Luoghi mappati'
+mission.to.manage: 'Missioni da gestire'
+all.mission.managed: 'Gestione missioni'
+goto.manage: 'Vai a gestione'
+multiPick: 'Carico multiplo'
+localization: Localizza
+picture.visibility.help.message: 'Immagini caricate dagli autisti. Quello che aggiungi qui lo possono vedere nei dettagli.'
+Picture: Foto
+Description: Descrizione
+'Image file': Immagine
+Send: Invia
+pickedStuff: 'Luogo consegna'
+mission:
+    complete:
+        title: 'Missione completata!'
+    pickup:
+        message: 'Merce ritirata.'
+    express:
+        message: 'ATTENZIONE, va in consegna DIRETTA.'
+    delivery:
+        message: 'Ottimo, grazie.'
+
+entities:
+    App\Entity\Vehicle:
+        singular: Automezzo
+        plural: Automezzi
+        properties:
+            model: modello
+            plate: targa
+            color: colore
+            is_available: disponibile
+            length: lunghezza
+            width: larghezza
+            height: altezza
+            weight_range: portata
+            purchase_at: acquistato
+            next_tax_at: bollo
+            next_inspection_at: revisione
+            next_tachograph_at: tachigrafo
+            note: Note
+    App\Entity\Mission:
+        singular: Missione
+        plural: Missioni
+        properties:
+            id: id
+            pickingVehicle: 'Mezzo Ritiro'
+            pickupPlace: 'Luogo Ritiro'
+            pickup_at: 'Data Ritiro'
+            available_at: 'Ritirabile da'
+            picked: Ritirato
+            deliveringVehicle: 'Mezzo Consegna'
+            deliveryPlace: 'Luogo Consegna'
+            delivery_at: 'Data Consegna'
+            delivered_before_at: 'Consegnare entro'
+            pickedStuff: 'Merce ritirata'
+            scheduled_at: 'Appuntamento'
+            delivered: Consegnato
+            express: Espresso
+            status: status
+            weight: peso
+            area: area
+            packages: Merce
+            note: Note
+    App\Entity\Address:
+        singular: Indirizzo
+        plural: Indirizzi
+        properties:
+            addressLine1: Indirizzo
+            addressLine2: Indirizzo2
+            city: Comune
+            province: Provincia
+            coordinates: Coordinate
+    App\Entity\Place:
+        singular: Luogo
+        plural: Luoghi
+        properties:
+            name: Nominativo
+            address.addressLine1: Indirizzo
+            address.addressLine2: Indirizzo2
+            address.city: Comune
+            address.province: Provincia
+            note: Note
+    App\Entity\Package:
+        singular: Merce
+        plural: Merce
+        properties:
+            id: id
+            length: Lunghezza
+            width: Larghezza
+            height: Altezza
+            weight: Peso
+            aspect: Aspetto
+            quantity: Quantità
+    App\Entity\DriverLog:
+        singular: Registro
+        plural: Registri
+        properties:
+            category: categoria
+            startDate: inizio
+            endDate: fine
+            driver: autista
+            vehicle: mezzo
+            note: Note
+    App\Entity\User:
+        singular: Utente
+        plural: Utenti
+        properties:
+            id: id
+            username: Username
+            password: Password
+            firedAt: Licenziato
+            roles: Ruoli
+
+Mission: Missione
+Missions: Missioni
+Add: Aggiungi
+Management: Gestione
+General: Generale
+Packages: Merce
+Documents: Documenti
+Pictures: Foto
+MapsView: 'Vista Mappa'
+
+Quantity: Quantità
+Aspect: Aspetto
+Length: Lunghezza
+Width: Larghezza
+Height: Altezza
+Weight: Peso cadauno
+millimeters: millimetri
+kilograms: kilogrammi
+
+delivery: consegna
+Delivery: Consegna
+'Delivery place': 'Luogo consegna'
+pickup: ritiro
+Pickup: Ritiro
+view: dettagli
+Retry: Riprova
+Logout: Esci
+home.start: Inizia
+image.description: descrizione
+done.missions: Eseguite
+todo.missions: Attive
+home.admin: 'Gestione'
+sorry.no.missions: 'Nessuna missione trovata!'
+category:
+    drive: 'guida'
+    holiday: 'ferie'
+    permit: 'permesso'
+    donation: 'donazione'
+dashboard.driverlog: 'Registro presenze'
+foreignKey.error.onTable: "Errore! L'elemento è collegato ad altri presenti sulla tabella \"{table}\""
+unassigned.missions: 'Nuove missioni'
+Dashboard: Pannello
+Settings: Impostazioni
+Import: Importare
+Export: Esportare
+"Export all": 'Esportare tutto'
+
+

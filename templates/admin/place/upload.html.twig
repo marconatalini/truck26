@@ -1,0 +1,10 @@
+{% extends "@EasyAdmin/page/content.html.twig" %}
+
+{% block content_title %}Carica file Excel{% endblock %}
+
+{% block main %}
+    {{ form_start(form) }}
+    {{ form_row(form.excel_file) }}
+    {{ form_row(form.upload) }}
+    {{ form_end(form) }}
+{% endblock %}

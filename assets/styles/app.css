@@ -1,0 +1,46 @@
+body {
+}
+
+.btn-pickup {
+    background-color: var(--bs-success);
+    color: whitesmoke;
+}
+
+.btn-delivery {
+    background-color: var(--bs-warning);
+    color: darkslategray;
+}
+
+.title {
+    font-size: 76px;
+}
+
+.navbar-brand {
+    font-weight: 600;
+    span {
+        color: whitesmoke;
+        background-color: #0b5ed7;
+        padding: 0.4rem;
+    }
+}
+
+.title span{
+    color: whitesmoke;
+    background-color: #0b5ed7;
+    padding: 0.5rem;
+    margin: 0.5rem;
+}
+
+table .empty-row td span {
+    background: lightgray;
+    color: lightgray;
+    border-radius: 1rem;
+    display: block;
+    block-size: 25px;
+    /*margin: px;*/
+    inline-size: 100%;
+}
+
+.container.missions {
+    margin-top: 80px;
+}

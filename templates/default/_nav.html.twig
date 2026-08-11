@@ -1,0 +1,29 @@
+<nav class="navbar navbar-expand-lg fixed-top bg-light" aria-label="Truck26 navbar">
+    <div class="container"><a class="navbar-brand" href="{{ path('app_home') }}">Truck <span>26</span></a>
+        <button class="navbar-toggler collapsed" type="button" data-bs-toggle="collapse"
+                data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false"
+                aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
+        <div class="navbar-collapse collapse" id="navbar" style="">
+            <ul class="navbar-nav ms-auto mb-2 mb-lg-0 text-end">
+                {% if is_granted('ROLE_USER') %}
+                <li class="nav-item dropdown"><a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown"
+                                                 aria-expanded="false">{{ 'Missions'|trans }}</a>
+                    <ul class="dropdown-menu text-end text-lg-start">
+                        <li class="nav-item"><a class="nav-link" aria-current="page" href="{{ path('app_mission_index') }}">{{ 'todo.missions'|trans }}</a></li>
+                        <li class="nav-item"><a class="nav-link" aria-current="page" href="{{ path('app_done_mission_index') }}">{{ 'done.missions'|trans }}</a></li>
+                        <li class="nav-item"><a class="nav-link" aria-current="page" href="{{ path('app_mission_unassigned_index') }}">{{ 'unassigned.missions'|trans }}</a></li>
+                    </ul>
+                </li>
+                    {% if is_granted('ROLE_ADMIN') %}
+                        <li class="nav-item"><a class="nav-link" href="{{ path('admin') }}">{{ 'Admin'|trans   }}</a></li>
+                    {% endif %}
+                <li class="nav-item"><a class="nav-link" href="{{ path('app_logout') }}">{{ 'Logout'|trans   }}</a></li>
+                {% endif %}
+
+{#                <li class="nav-item"><a class="nav-link disabled" aria-disabled="true">Disabled</a></li>#}
+
+            </ul>
+{#            <form role="search"><input class="form-control" type="search" placeholder="Search" aria-label="Search"></form>#}
+        </div>
+    </div>
+</nav>

@@ -1,0 +1,20 @@
+<div class="col">
+    <div class="card">
+        <div class="card-header bg-primary">
+            <i class="fa-solid fa-calendar-check"></i>
+        </div>
+        <div class="card-body">
+            <h5 class="card-title">{{ 'dashboard.driverlog'|trans }} {{ date('now')|date('d.m') }}</h5>
+            <a class="card-subtitle text-body-secondary" href="{{ path('admin_driver_log_index') }}">{{ 'goto.manage'|trans }}</a>
+            <ul class="mt-3">
+                {% for log in driver_logs %}
+                    <li class="card-text"> {{ log.driver }}
+                        <a href="{{ path('admin_driver_log_edit', {entityId: log.id}) }}">
+                            {{ ('category.' ~ log.category)|trans }} {{ log.vehicle }}
+                        </a>
+                    </li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+</div>

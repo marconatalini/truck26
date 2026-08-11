@@ -1,0 +1,21 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Map {{ vehicle.plate }}{% endblock %}
+
+{% block nav %}{% endblock %}
+
+{% block body %}
+    <div class="container-fluid d-flex flex-column vh-100 align-items-center">
+    {% if missions|length > 0 %}
+        <div id="map"
+             data-places='{{ missions|json_encode }}'
+             data-mode='all'
+            {{ stimulus_controller('vehicle-map') }}
+        ></div>
+    {% else %}
+        <h1 class="my-auto">{{ 'sorry.no.missions'|trans }}</h1>
+    {% endif %}
+    </div>
+{% endblock %}
+
+

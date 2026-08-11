@@ -1,0 +1,17 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Truck26{% endblock %}
+
+{% block main_class %}bg-light d-flex align-items-center justify-content-center vh-100{% endblock %}
+
+{% block nav %}{% endblock %}
+
+{% block main %}
+    <div class="text-center">
+        <h1 class="display-6 fw-bold title">Truck<span>26</span></h1>
+        <p class="lead text-muted">Gestione integrata trasporti giornalieri</p>
+
+        <a href="{{ path('app_login') }}" class="btn btn-success mt-auto">{{ 'home.start'|trans }}</a>
+
+    </div>
+{% endblock %}

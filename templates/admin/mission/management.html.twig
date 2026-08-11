@@ -1,0 +1,71 @@
+{% extends "@EasyAdmin/page/content.html.twig" %}
+
+{% block main %}
+    <div class="row" {{ stimulus_controller('calendar') }}>
+        <div data-url="{{ absolute_url(path('admin_mission_detail', {entityId : 1})) }}" {{ stimulus_target('calendar', 'viewUrl') }}></div>
+        <div data-url="{{ absolute_url(path('admin_mission_calendar_drop' , {id: 1})) }}" {{ stimulus_target('calendar', 'dropUrl') }}></div>
+        <div data-url="{{ absolute_url(path('admin_mission_calendar_move', {id: 1})) }}" {{ stimulus_target('calendar', 'moveUrl') }}></div>
+        <div data-url="{{ absolute_url(path('admin_vehicle_map', {id: 1})) }}" {{ stimulus_target('calendar', 'mapUrl') }}></div>
+        <div data-url="{{ absolute_url(path('admin_vehicle_chart', {id: 1})) }}" {{ stimulus_target('calendar', 'chartUrl') }}></div>
+        <div data-url="{{ absolute_url(path('admin_vehicle_pdf', {id: 1})) }}" {{ stimulus_target('calendar', 'pdfUrl') }}></div>
+
+        {% if start_missions|length > 0 or pending_missions|length > 0 %}
+        <div class="col-3">
+            {{ include('admin/mission/_pending_missions.html.twig') }}
+        </div>
+        <div class="col-9 min-vh-100">
+        {% else %}
+        <div class="min-vh-100">
+        {% endif %}
+            {{ include('admin/mission/_available_vehicle_choices.html.twig') }}
+            <div id="truck1-calendar" {{ stimulus_target('calendar', 'calendarEl') }}></div>
+        </div>
+
+
+        <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasMap" aria-labelledby="offcanvasMapLabel">
+            <div class="offcanvas-header">
+                <h5 class="offcanvas-title" id="offcanvasMapLabel">Map</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+            </div>
+            <div class="offcanvas-body">
+                <!-- Content will be injected here -->
+                <iframe id="mapFrame" src="" class="panel-iframe"
+                    {{ stimulus_target('calendar','iframeMap') }}
+                ></iframe>
+            </div>
+        </div>
+
+        <div class="offcanvas offcanvas-start" tabindex="-1" id="offcanvasChart" aria-labelledby="offcanvasChartLabel">
+            <div class="offcanvas-header">
+                <h5 class="offcanvas-title" id="offcanvasChartLabel">Chart</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+            </div>
+            <div class="offcanvas-body">
+                <!-- Content will be injected here -->
+                <iframe id="chartFrame" src="" class="panel-iframe"
+                    {{ stimulus_target('calendar', 'iframeChart') }}
+                ></iframe>
+            </div>
+        </div>
+
+            <!-- Modal -->
+        <div class="modal fade" id="NotBeforeModal" tabindex="-1" aria-labelledby="NotBeforeModalLabel" aria-hidden="true"
+            {{ stimulus_target('calendar', 'notBeforeModal') }}>
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h1 class="modal-title fs-5" id="NotBeforeModalLabel">NON ancora disponibile</h1>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <p>La merce non può essere ritirata in questo orario. Controlla la disponibilità merce nei dettagli della missione.</p>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary" data-bs-dismiss="modal">OK</button>
+{#                        <button type="button" class="btn btn-primary">Save changes</button>#}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

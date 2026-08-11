@@ -39,7 +39,22 @@ ENV COMPOSER_ALLOW_SUPERUSER=1
 ENV PHP_INI_SCAN_DIR=":$PHP_INI_DIR/app.conf.d"
 
 ###> recipes ###
-###< recipes ###
+###> doctrine/doctrine-bundle ###
+RUN install-php-extensions pdo_pgsql
+###< doctrine/doctrine-bundle ###
+###> intervention/image ###
+RUN <<-EOF
+    apt-get update
+    apt-get install -y \
+    libpng-dev \
+    libjpeg-dev \
+    libwebp-dev \
+    libavif-dev
+    docker-php-ext-configure gd --with-jpeg --with-webp --with-avif
+    docker-php-ext-install gd
+EOF
+###< intervention/image ###
+###> recipes ###
 
 COPY --link frankenphp/conf.d/10-app.ini $PHP_INI_DIR/app.conf.d/
 COPY --link --chmod=755 frankenphp/docker-entrypoint.sh /usr/local/bin/docker-entrypoint
@@ -100,7 +115,7 @@ RUN composer install --no-cache --prefer-dist --no-dev --no-autoloader --no-scri
 COPY --link --exclude=frankenphp/ . ./
 
 RUN <<-EOF
-	mkdir -p var/cache var/log var/share
+	mkdir -p var/cache var/log var/share public/upload
 	composer dump-autoload --classmap-authoritative --no-dev
 	composer dump-env prod
 	composer run-script --no-dev post-install-cmd
@@ -163,6 +178,7 @@ EOF
 
 COPY --link --exclude=var --from=frankenphp_prod_builder /app /app
 COPY --chown=www-data:www-data --from=frankenphp_prod_builder /app/var /app/var
+COPY --chown=www-data:www-data --from=frankenphp_prod_builder /app/public/upload /app/public/upload
 
 COPY --link --chmod=755 frankenphp/docker-entrypoint.sh /usr/local/bin/docker-entrypoint
 

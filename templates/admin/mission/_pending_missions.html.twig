@@ -1,0 +1,31 @@
+<h6 class="text-muted">RITIRI</h6>
+{% for mission in start_missions %}
+    <div class="border-start border-3 border-warning d-flex"
+        {{ stimulus_target('calendar', 'draggable') }}
+         data-event="{{ mission|json_encode() }}"
+    >
+
+        <a class="mx-2" href="{{ path('admin_mission_detail', {entityId: mission.id}) }}"><i class="fa-regular fa-circle-question"></i></a>
+        <p>{{ mission.pickupPlaceName }} > {{ mission.weight }}kg / {{ mission.area }}mq<br>
+            {% if mission.express %}
+                <i class="fa-solid fa-truck-fast"></i>
+            {% endif %}
+            {{ mission.deliveryPlaceName}}
+        </p>
+    </div>
+{% endfor %}
+<h6 class="text-muted my-2">CONSEGNE</h6>
+{% for mission in pending_missions %}
+    <div class="border-start border-3 border-success d-flex"
+        {{ stimulus_target('calendar', 'draggable') }}
+         data-event="{{ mission|json_encode()}}"
+    >
+
+        <a class="mx-2" href="{{ path('admin_mission_detail', {entityId: mission.id}) }}"><i class="fa-regular fa-circle-question"></i></a>
+        <p>{{ mission.plate }} > {{ mission.weight }}kg / {{ mission.area }}mq<br>
+            per {{ mission.deliveryPlaceName}}
+        </p>
+    </div>
+
+{% endfor %}
+
