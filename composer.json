@@ -10,8 +10,8 @@
         "ext-ctype": "*",
         "ext-iconv": "*",
         "doctrine/doctrine-migrations-bundle": "^4.0",
-        "dompdf/dompdf": "^3.1",
-        "easycorp/easyadmin-bundle": "^5.0.7",
+        "dompdf/dompdf": "^3.1.6",
+        "easycorp/easyadmin-bundle": "^5.5.1",
         "intervention/image-symfony": "^4.0",
         "liip/imagine-bundle": "^2.17",
         "martin-georgiev/postgresql-for-doctrine": "^4.7",
@@ -39,7 +39,7 @@
         "symfony/yaml": "8.1.*",
         "twig/extra-bundle": "^2.12|^3.0",
         "twig/twig": "^2.12|^3.28",
-        "vich/uploader-bundle": "^2.9"
+        "vich/uploader-bundle": "^2.9.4"
     },
     "config": {
         "allow-plugins": {
@@ -100,6 +100,6 @@
         "symfony/maker-bundle": "^1.67",
         "symfony/stopwatch": "8.1.*",
         "symfony/web-profiler-bundle": "8.1.*",
-        "zenstruck/foundry": "^2.9"
+        "zenstruck/foundry": "^2.11.3"
     }
 }

@@ -16,7 +16,7 @@ class MissionSubscriber implements EventSubscriberInterface
     private int $totalArea;
 
     public function __construct(
-        readonly MissionWorkflow $missionStateMachine,
+        private readonly MissionWorkflow $missionStateMachine,
     )
     {
 //        $this->totalWeight = 0;

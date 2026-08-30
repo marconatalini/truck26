@@ -62,7 +62,8 @@ class DashboardController extends AbstractDashboardController
         yield MenuItem::section('Mission');
 //        yield MenuItem::linkTo(AddressCrudController::class, null, 'fas fa-list');
         yield MenuItem::linkTo(PlaceCrudController::class, null, 'fas fa-location-dot');
-        yield MenuItem::subMenu('Mission', 'fas fa-flag-checkered')->setSubItems([
+        yield MenuItem::subMenu('Mission', 'fas fa-flag-checkered')
+            ->setSubItems([
             MenuItem::linkToRoute('Add', 'fas fa-plus-circle', 'admin_mission_new'),
             MenuItem::linkToRoute('Management', 'fas fa-calendar', 'admin_mission_management'),
             MenuItem::linkTo(MissionCrudController::class, null, 'fas fa-list'),
