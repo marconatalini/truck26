@@ -17,9 +17,7 @@
                     {{ include('mission/_mission.html.twig') }}
                 {% set lastDayNumber = mission.scheduledAt|date('d') %}
             {% else %}
-                {% for i in 1..3 %}
-                    {{ include('mission/_empty_mission.html.twig') }}
-                {% endfor %}
+                {{ include('mission/_empty_index.html.twig') }}
             {% endfor %}
         </div>
 
@@ -29,7 +27,7 @@
             <div class="modal-dialog modal-dialog-centered">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="confirmModalLabel">Conferma Operazione</h5>
+                        <h5 class="modal-title" id="confirmModalLabel" {{ stimulus_target('mission', 'modalTitle') }}></h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">

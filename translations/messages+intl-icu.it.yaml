@@ -9,7 +9,7 @@ I:
 back:
     to:
         missions: 'Torna alle missioni'
-        index: "Torna all'indice"
+        index: "Torna indietro"
 
 novehicle.avaible: 'Nessun mezzo disponibile'
 register.not.available: 'Nessun mezzo assegnato'
@@ -35,10 +35,19 @@ mission:
         title: 'Missione completata!'
     pickup:
         message: 'Merce ritirata.'
+        express: 'Merce ritirata, la consegna sarà definita a breve.'
     express:
-        message: 'ATTENZIONE, va in consegna DIRETTA.'
+        message: 'ATTENZIONE, la merce va in consegna DIRETTA.'
     delivery:
         message: 'Ottimo, grazie.'
+    modal:
+        confirm: "Questa azione non si può annullare. Potrai trovare la missione nell'elenco di quelle eseguite"
+        title: 'Conferma {action}'
+    picture:
+        title: 'Mission #{id}'
+        lead: 'Carica una foto'
+    empty:
+        index: 'Nessuna missione'
 
 entities:
     App\Entity\Vehicle:
@@ -177,5 +186,7 @@ Settings: Impostazioni
 Import: Importare
 Export: Esportare
 "Export all": 'Esportare tutto'
+
+
 
 

@@ -28,7 +28,9 @@
             <a href="{{ path('app_mission_detail', {id: mission.id}) }}" class="btn btn-outline-secondary">{{ 'view'|trans }}</a>
             {% for transition in workflow_transitions(mission) %}
                 <a href="{{ path('app_mission_' ~ transition.name, {id: mission.id}) }}" class="btn btn-outline-secondary btn-{{ transition.name }}"
-                   data-bs-target="#confirmModal" data-bs-toggle="modal" data-message="Hai scelto una azione. Procedo?"
+                   data-bs-target="#confirmModal" data-bs-toggle="modal"
+                   data-message="{{ 'mission.modal.confirm'|trans({'action': transition.name|trans|upper}) }}"
+                   data-title="{{ 'mission.modal.title'|trans({'action': transition.name|trans|upper}) }}"
                     {{ stimulus_action('mission', 'modalConfirm') }}
                 >{{ transition.name|trans }}</a>
             {% endfor %}

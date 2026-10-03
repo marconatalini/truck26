@@ -10,7 +10,7 @@ import { Controller } from '@hotwired/stimulus';
  * Delete this file or adapt it for your use!
  */
 export default class extends Controller {
-    static targets = ['modalText','modalConfirmBtn', 'prevUrl']
+    static targets = ['modalText','modalTitle','modalConfirmBtn', 'prevUrl']
 
     connect() {
         // this.element.textContent = 'Hello Stimulus! Edit me in assets/controllers/hello_controller.js';
@@ -19,6 +19,7 @@ export default class extends Controller {
     modalConfirm(e) {
         let targetUrl = e.target.href;
         this.modalTextTarget.innerHTML = e.target.dataset.message;
+        this.modalTitleTarget.innerHTML = e.target.dataset.title;
         this.modalConfirmBtnTarget.addEventListener('click', function(evt) {
             window.location.href = targetUrl; // Reindirizza l'utente
         });

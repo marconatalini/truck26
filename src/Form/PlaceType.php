@@ -36,6 +36,7 @@ class PlaceType extends AbstractType
     public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
+            'placeholder' => 'Scegli...'
 //            'data_class' => Place::class,
         ]);
     }

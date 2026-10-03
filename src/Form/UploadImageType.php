@@ -6,6 +6,7 @@ use App\Entity\MediaUpload;
 use App\Entity\PictureUpload;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Vich\UploaderBundle\Form\Type\VichFileType;
@@ -16,24 +17,26 @@ class UploadImageType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
+            ->add('description', TextareaType::class ,[
+                'label' => 'image.description',
+                'attr' => [
+                    'placeholder' => 'image.description',
+                    'rows' => '6',
+                    'class' => 'h-100',
+                ],
+                'row_attr' => [
+                    'class' => 'form-floating mb-3',
+                ],
+            ])
             ->add('imageFile', VichImageType::class, [
                 'allow_delete' => false,
                 'download_uri' => true,
                 'label' => false,
             ])
-            ->add('description', null ,[
-                'label' => 'image.description',
-                'attr' => [
-                    'placeholder' => 'image.description',
-                ],
-                'row_attr' => [
-                    'class' => 'form-floating',
-                ],
-            ])
             ->add('submit', SubmitType::class, [
                 'label' => 'Send',
                 'row_attr' => [
-                    'class' => 'btn btn-primary mt-5',
+                    'class' => 'btn btn-primary',
                 ]
             ])
 //            ->add('expireAt', null, [

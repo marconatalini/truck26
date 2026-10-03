@@ -137,9 +137,14 @@ final class MissionController extends AbstractController
 
         $this->missionWorkflow->suspend($mission);
         $this->missionRepository->save($mission, true);
+        $message = 'mission.pickup.message';
+
+        if ($mission->isExpress()) {
+            $message = 'mission.pickup.express';
+        }
 
         return $this->render('mission/success.html.twig', [
-            'message' => 'mission.pickup.message',
+            'message' => $message,
         ]);
 
     }

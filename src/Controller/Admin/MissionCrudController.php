@@ -87,8 +87,8 @@ class MissionCrudController extends AbstractCrudController
                 ->setQueryBuilder(
                     fn (QueryBuilder $queryBuilder): QueryBuilder => $queryBuilder->andWhere('entity.is_available = true')
                 ),
-            DateTimeField::new('delivery_at')->setColumns(4)->hideOnIndex(),
             DateTimeField::new('delivered_before_at')->setColumns(4)->hideOnIndex(),
+            DateTimeField::new('delivery_at')->setColumns(4)->hideOnIndex(),
             BooleanField::new('express')->setColumns(4),
 
 

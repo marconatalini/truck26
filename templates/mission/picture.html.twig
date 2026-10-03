@@ -7,8 +7,8 @@
 
 {% block body %}
     <div class="container missions text-center">
-        <h1>Mission #{{ mission.id }}</h1>
-        <h6 class="lead">aggiungi una foto</h6>
+        <h1>{{ 'mission.picture.title'|trans({'id': mission.id})}}</h1>
+        <h6 class="lead">{{ 'mission.picture.lead'|trans }}</h6>
         <div class="mt-5">
             {{ form(form) }}
         </div>
