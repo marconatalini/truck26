@@ -85,13 +85,13 @@ class Mission
     /**
      * @var Collection<int, MediaUpload>
      */
-    #[ORM\OneToMany(targetEntity: MediaUpload::class, mappedBy: 'mission', cascade: ['persist', 'remove'])]
+    #[ORM\OneToMany(targetEntity: MediaUpload::class, mappedBy: 'mission', cascade: ['persist', 'remove'], orphanRemoval: true)]
     private Collection $documents;
 
     /**
      * @var Collection<int, PictureUpload>
      */
-    #[ORM\OneToMany(targetEntity: PictureUpload::class, mappedBy: 'mission', cascade: ['persist', 'remove'])]
+    #[ORM\OneToMany(targetEntity: PictureUpload::class, mappedBy: 'mission', cascade: ['persist', 'remove'], orphanRemoval: true)]
     private Collection $pictures;
 
     #[ORM\Column]

@@ -115,7 +115,7 @@ RUN composer install --no-cache --prefer-dist --no-dev --no-autoloader --no-scri
 COPY --link --exclude=frankenphp/ . ./
 
 RUN <<-EOF
-	mkdir -p var/cache var/log var/share public/upload
+	mkdir -p var/cache var/log var/share public/media public/upload
 	composer dump-autoload --classmap-authoritative --no-dev
 	composer dump-env prod
 	composer run-script --no-dev post-install-cmd
@@ -176,9 +176,13 @@ RUN <<-EOF
 	find / -perm /6000 -type f -exec chmod a-s {} + 2>/dev/null || true
 EOF
 
-COPY --link --exclude=var --from=frankenphp_prod_builder /app /app
+COPY --link --exclude=var --exclude=public/upload --exclude=public/media --from=frankenphp_prod_builder /app /app
 COPY --chown=www-data:www-data --from=frankenphp_prod_builder /app/var /app/var
 COPY --chown=www-data:www-data --from=frankenphp_prod_builder /app/public/upload /app/public/upload
+COPY --chown=www-data:www-data --from=frankenphp_prod_builder /app/public/media /app/public/media
+
+# Ensure www-data has write (w) and traversal (x) permissions on copied directories
+# RUN chmod -R 775 /app/public/upload /app/public/media
 
 COPY --link --chmod=755 frankenphp/docker-entrypoint.sh /usr/local/bin/docker-entrypoint
 

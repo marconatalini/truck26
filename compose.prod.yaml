@@ -6,7 +6,14 @@ services:
     build:
       context: .
       target: frankenphp_prod
+    volumes:
+      - upload_data:/app/public/upload
+      - media_data:/app/public/media
     environment:
       APP_SECRET: ${APP_SECRET}
       MERCURE_PUBLISHER_JWT_KEY: ${CADDY_MERCURE_JWT_SECRET}
       MERCURE_SUBSCRIBER_JWT_KEY: ${CADDY_MERCURE_JWT_SECRET}
+
+volumes:
+  upload_data:
+  media_data:

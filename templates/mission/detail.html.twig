@@ -58,9 +58,9 @@
                 </tr>
                 {% for pic in mission.pictures %}
                 <tr>
-                    <td>{{ 'Picture'|trans }} #{{ pic.id }}</td>
-                    <td colspan="2">
-                        <img src="{{ vich_uploader_asset(pic)| imagine_filter('my_thumb') }}" alt="{{ pic.description }}">
+                    <td colspan="3">
+                        {{ 'Picture'|trans }} #{{ pic.id }} {{ pic.description }}<br>
+                        <img src="{{ vich_uploader_asset(pic, 'imageFile', 'App\\entity\\PictureUpload')| imagine_filter('my_thumb') }}" alt="{{ pic.description }}">
                     </td>
                 </tr>
                 {% endfor %}

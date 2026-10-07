@@ -17,7 +17,8 @@ class UploadImageType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('description', TextareaType::class ,[
+            ->add('description', TextareaType::class)
+        /*, TextareaType::class ,[
                 'label' => 'image.description',
                 'attr' => [
                     'placeholder' => 'image.description',
@@ -27,18 +28,11 @@ class UploadImageType extends AbstractType
                 'row_attr' => [
                     'class' => 'form-floating mb-3',
                 ],
-            ])
+            ])*/
             ->add('imageFile', VichImageType::class, [
                 'allow_delete' => false,
-                'download_uri' => true,
-                'label' => false,
             ])
-            ->add('submit', SubmitType::class, [
-                'label' => 'Send',
-                'row_attr' => [
-                    'class' => 'btn btn-primary',
-                ]
-            ])
+
 //            ->add('expireAt', null, [
 //                'help' => 'Can be deleted after...'
 //            ])

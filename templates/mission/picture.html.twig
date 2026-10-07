@@ -10,7 +10,17 @@
         <h1>{{ 'mission.picture.title'|trans({'id': mission.id})}}</h1>
         <h6 class="lead">{{ 'mission.picture.lead'|trans }}</h6>
         <div class="mt-5">
-            {{ form(form) }}
+            {{ form_start(form) }}
+            {{ form_row(form.description, {
+                label: 'image.description',
+                attr: { placeholder : 'image.description', rows: '6', class: 'h-100'},
+                row_attr: { class: 'form-floating mb-3'}
+            }) }}
+            {{ form_row(form.imageFile, {
+                label: false
+            }) }}
+            <button type="submit" class="btn-primary btn">{{ 'Send'|trans }}</button>
+            {{ form_end(form) }}
         </div>
     </div>
 {% endblock %}
