@@ -85,7 +85,7 @@ entities:
             scheduled_at: 'Appuntamento'
             delivered: Consegnato
             express: Espresso
-            status: status
+            status: Status
             weight: peso
             area: area
             packages: Merce
@@ -186,7 +186,8 @@ Settings: Impostazioni
 Import: Importare
 Export: Esportare
 "Export all": 'Esportare tutto'
-
-
-
-
+Please sign in: 'Dati di accesso'
+Remember me: 'Ricordami'
+Sign in: 'Accedi'
+Details: Dettagli
+no.pictures: 'Nessuna immagine'

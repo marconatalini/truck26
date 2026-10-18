@@ -1,0 +1,27 @@
+{# @var ea \EasyCorp\Bundle\EasyAdminBundle\Context\AdminContext #}
+{# @var field \EasyCorp\Bundle\EasyAdminBundle\Dto\FieldDto #}
+{# @var entity \EasyCorp\Bundle\EasyAdminBundle\Dto\EntityDto #}
+{# this is a bit ugly, but Twig doesn't have a 'is numeric' test #}
+{% if field.formattedValue matches '/^\\d+$/' %}
+    <twig:ea:Badge variant="secondary">{{ field.formattedValue }}</twig:ea:Badge>
+{% else %}
+    {% for pic in field.value %}
+        <div class="ea-vich-image">
+            <a href="{{ vich_uploader_asset(pic, 'imageFile', 'App\\entity\\PictureUpload') }}" target="_blank" rel="noopener"
+               class="ea-lightbox-thumbnail" data-ea-lightbox-content-selector="#ea-lightbox-Mission_pictures_{{ loop.index }}_imageFile">
+                <img src="{{ vich_uploader_asset(pic, 'imageFile', 'App\\entity\\PictureUpload') }}">
+            </a>
+
+            <div id="ea-lightbox-Mission_pictures_{{ loop.index }}_imageFile" class="ea-lightbox">
+                <img src="{{ vich_uploader_asset(pic, 'imageFile', 'App\\entity\\PictureUpload') }}">
+            </div>
+
+{#            <div class="small" id="Mission_pictures_0_imageFile_file_new_file_name"></div>#}
+        </div>
+
+{#        {{ 'Picture'|trans }} #{{ pic.id }} {{ pic.description }}<br>#}
+{#        <img src="{{ vich_uploader_asset(pic, 'imageFile', 'App\\entity\\PictureUpload')| imagine_filter('my_thumb') }}" alt="{{ pic.description }}">#}
+    {% else %}
+        <h3>{{ 'no.pictures'|trans }}</h3>
+    {% endfor %}
+{% endif %}

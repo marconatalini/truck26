@@ -21,6 +21,6 @@
 ###< liip/imagine-bundle ###
 
 /public/upload/
-avvia_truck26.sh
-*.xlsx
+/avvia_truck26.sh
+/*.xlsx
 

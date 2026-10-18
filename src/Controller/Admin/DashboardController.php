@@ -59,19 +59,18 @@ class DashboardController extends AbstractDashboardController
     public function configureMenuItems(): iterable
     {
         yield MenuItem::linkToDashboard('Dashboard', 'fa fa-home');
-        yield MenuItem::section('Mission');
-//        yield MenuItem::linkTo(AddressCrudController::class, null, 'fas fa-list');
+
+        yield MenuItem::section('Data');
         yield MenuItem::linkTo(PlaceCrudController::class, null, 'fas fa-location-dot');
-        yield MenuItem::subMenu('Mission', 'fas fa-flag-checkered')
-            ->setSubItems([
-            MenuItem::linkToRoute('Add', 'fas fa-plus-circle', 'admin_mission_new'),
-            MenuItem::linkToRoute('Management', 'fas fa-calendar', 'admin_mission_management'),
-            MenuItem::linkTo(MissionCrudController::class, null, 'fas fa-list'),
-        ]);
-//        yield MenuItem::linkTo(PackageCrudController::class, null, 'fas fa-list');
+        yield MenuItem::linkTo(MissionCrudController::class, null, 'fas fa-list');
         yield MenuItem::linkTo(VehicleCrudController::class, null, 'fas fa-truck');
         yield MenuItem::linkTo(DriverLogCrudController::class, null, 'fas fa-calendar-days');
         // yield MenuItem::linkTo(SomeCrudController::class, 'The Label', 'fas fa-list');
+
+        yield MenuItem::section('Mission');
+        yield MenuItem::linkToRoute('Add', 'fas fa-plus-circle', 'admin_mission_new');
+        yield MenuItem::linkToRoute('Management', 'fas fa-calendar', 'admin_mission_management');
+
         yield MenuItem::section('Settings');
         yield MenuItem::linkTo(UserCrudController::class, null, 'fas fa-users');
         yield MenuItem::linkToLogout('Logout', 'fas fa-sign-out-alt');

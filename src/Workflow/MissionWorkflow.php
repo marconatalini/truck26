@@ -41,6 +41,7 @@ class MissionWorkflow
     {
         $this->workflow->apply($mission, MissionTransition::MISSION_PICKUP);
         $mission->setPicked(true);
+        $mission->setPickupAt(new \DateTimeImmutable());
         $this->missionRepository->save($mission);
     }
 
@@ -65,12 +66,11 @@ class MissionWorkflow
         $this->missionRepository->save($mission, flush: true);
     }
 
-
-
     public function delivery(Mission $mission): void
     {
         $this->workflow->apply($mission, MissionTransition::MISSION_DELIVERY);
         $mission->setDelivered(true);
+        $mission->setDeliveryAt(new \DateTimeImmutable());
         $this->missionRepository->save($mission);
     }
 

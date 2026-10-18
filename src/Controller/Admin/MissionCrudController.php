@@ -68,9 +68,9 @@ class MissionCrudController extends AbstractCrudController
             ,
             AssociationField::new('pickingVehicle')->setQueryBuilder(
                 fn (QueryBuilder $queryBuilder): QueryBuilder => $queryBuilder->andWhere('entity.is_available = true')
-            ),
+            )->setDisabled(),
             DateTimeField::new('available_at')->setColumns(4)->hideOnIndex(),
-            DateTimeField::new('pickup_at')->setColumns(4)->hideOnIndex(),
+            DateTimeField::new('pickup_at')->setColumns(4)->hideOnIndex()->setDisabled(),
 
             FormField::addColumn('col-xs-12 col-md-6'),
             FormField::addFieldset(t('Delivery')),
@@ -83,12 +83,11 @@ class MissionCrudController extends AbstractCrudController
                     'data-ea-autocomplete-create-filter' => '^(.+)\s-\s(.*)\s\([A-Z]{2}\)$',
                 ])
             ,
-            AssociationField::new('deliveringVehicle')
-                ->setQueryBuilder(
+            AssociationField::new('deliveringVehicle')->setQueryBuilder(
                     fn (QueryBuilder $queryBuilder): QueryBuilder => $queryBuilder->andWhere('entity.is_available = true')
-                ),
+            )->setDisabled(),
             DateTimeField::new('delivered_before_at')->setColumns(4)->hideOnIndex(),
-            DateTimeField::new('delivery_at')->setColumns(4)->hideOnIndex(),
+            DateTimeField::new('delivery_at')->setColumns(4)->hideOnIndex()->setDisabled(),
             BooleanField::new('express')->setColumns(4),
 
 
@@ -102,8 +101,8 @@ class MissionCrudController extends AbstractCrudController
                 ->hideOnIndex()
                 ->setEntryType(PackageType::class)
                 ->addFormTheme('admin/theme/packages_theme.html.twig'),
-            IntegerField::new('weight')->setDisabled()->setColumns(3)->hideOnIndex(),
-            TextField::new('area')->setDisabled()->setColumns(3)->hideOnIndex(),
+            IntegerField::new('weight')->setDisabled()->setColumns(3)->hideOnIndex()->setHelp('kg'),
+            TextField::new('area')->setDisabled()->setColumns(3)->hideOnIndex()->setHelp('mq'),
 
             FormField::addTab('Details','fas fa-list-check'),
             TextField::new('status')->setDisabled()->hideOnIndex()->setColumns(3),
@@ -122,6 +121,7 @@ class MissionCrudController extends AbstractCrudController
             CollectionField::new('pictures')
                 ->setLabel(false)
                 ->setEntryType(UploadImageType::class)
+                ->setTemplatePath('admin/fields/upload_image_template.html.twig')
                 ->addJsFiles(Asset::fromEasyAdminAssetPackage('field-image.js'), Asset::fromEasyAdminAssetPackage('field-file-upload.js'))
                 ->hideOnIndex()
             ,
