@@ -7,6 +7,7 @@ use App\Entity\Package;
 use App\Entity\Vehicle;
 use App\Form\MultiPickingType;
 use App\Form\PlaceType;
+use App\Repository\PackageDefaultRepository;
 use App\Workflow\State\MissionState;
 use EasyCorp\Bundle\EasyAdminBundle\Collection\FieldCollection;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
@@ -23,6 +24,7 @@ use EasyCorp\Bundle\EasyAdminBundle\Field\AssociationField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\CollectionField;
 use EasyCorp\Bundle\EasyAdminBundle\Security\Permission;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Validator\Constraints as Assert;
 
 class MultiMissionCrudController extends AbstractCrudController
 {
@@ -55,20 +57,18 @@ class MultiMissionCrudController extends AbstractCrudController
                     'data-ea-autocomplete-create-filter' => '^(.+)\s-\s(.*)\s\([A-Z]{2}\)$',
                 ]);
             yield CollectionField::new('pickedStuff')->setColumns(12)
-                    ->setFormTypeOption('mapped' , false)
-                    ->addFormTheme('admin/theme/picking_theme.html.twig')
-                    ->setEntryType(MultiPickingType::class);
+                ->setFormTypeOption('mapped' , false)
+                ->setFormTypeOption('constraints', [
+                    new Assert\Count(min: 1, minMessage: 'packages.min.message', groups: ['multiPicking']),
+                ])
+                ->addFormTheme('admin/theme/picking_theme.html.twig')
+                ->setEntryType(MultiPickingType::class)
+            ;
         }
     }
 
     public function new(AdminContext $context): KeyValueStore|Response
     {
-        /*$event = new BeforeCrudActionEvent($context);
-        $this->container->get('event_dispatcher')->dispatch($event);
-        if ($event->isPropagationStopped()) {
-            return $event->getResponse();
-        }*/
-
         if (!$this->isGranted(Permission::EA_EXECUTE_ACTION, ['action' => Action::NEW, 'entity' => null, 'entityFqcn' => $context->getEntity()->getFqcn()])) {
             throw new ForbiddenActionException($context);
         }
@@ -84,36 +84,41 @@ class MultiMissionCrudController extends AbstractCrudController
         $context->getCrud()->setFieldAssets($this->getFieldAssets($context->getEntity()->getFields()));
         $this->container->get(ActionFactory::class)->processEntityActions($context->getEntity(), $context->getCrud()->getActionsConfig());
 
-        $newForm = $this->createNewForm($context->getEntity(), $context->getCrud()->getNewFormOptions(), $context);
+        $formOptions = $context->getCrud()->getNewFormOptions();
+        $formOptions->set('validation_groups', 'multiPicking');
+
+        $newForm = $this->createNewForm($context->getEntity(), $formOptions, $context);
         $newForm->handleRequest($context->getRequest());
 
         /** @var Mission $entityInstance */
         $entityInstance = $newForm->getData();
         $context->getEntity()->setInstance($entityInstance);
 
-        if ($newForm->isSubmitted() && $newForm->isValid()) {
-            /*$this->processUploadedFiles($newForm);*/
-
-            /*$event = new BeforeEntityPersistedEvent($entityInstance);
-            $this->container->get('event_dispatcher')->dispatch($event);
-            $entityInstance = $event->getEntityInstance();*/
-
-            $toDelivered = $newForm->get('pickedStuff')->getData();
-            $places = array_column($toDelivered, 'deliveryPlace');
-            array_multisort($places, SORT_ASC, $toDelivered);
+        if ($newForm->isSubmitted() && $newForm->isValid() ) {
+            $pickedStuff = $newForm->get('pickedStuff')->getData();
+            $places = array_column($pickedStuff, 'deliveryPlace');
+            array_multisort($places, SORT_ASC, $pickedStuff);
             $lastPlace = null;
-            foreach ($toDelivered as $delivery) {
-                if ($lastPlace != $delivery['deliveryPlace']) {
+            $newMissionCount = 0;
+            foreach ($pickedStuff as $picked) {
+                if ($lastPlace != $picked['deliveryPlace']) {
                     $mission = clone $entityInstance;
+                    $newMissionCount += 1;
                 }
                 $mission->setStatus(MissionState::PENDING);
-                $mission->setDeliveryPlace($delivery['deliveryPlace']);
+                $mission->setDeliveryPlace($picked['deliveryPlace']);
                 $mission->setPickupAt(new \DateTimeImmutable());
                 $mission->setPicked(true);
 
                 $package = new Package();
-                $package->setDefaults($delivery['aspect']);
-                $package->setQuantity($delivery['quantity']);
+                $packageDefaults = $picked['aspect'];
+                $package->setAspect($packageDefaults);
+                $package->setWeight($packageDefaults->getWeight());
+                $package->setHeight($packageDefaults->getHeight());
+                $package->setLength($packageDefaults->getLength());
+                $package->setWidth($packageDefaults->getWidth());
+
+                $package->setQuantity($picked['quantity']);
                 $mission->addPackage($package);
                 $mission->setWeight($mission->getWeight() +
                     $package->getWeight() * $package->getQuantity());
@@ -121,19 +126,10 @@ class MultiMissionCrudController extends AbstractCrudController
                     $package->getLength() * $package->getWidth()/1000000 * $package->getQuantity());
 
                 $this->persistEntity($this->container->get('doctrine')->getManagerForClass($context->getEntity()->getFqcn()), $mission);
-                $lastPlace = $delivery['deliveryPlace'];
+                $lastPlace = $picked['deliveryPlace'];
             }
 
-            /*$event = new AfterEntityPersistedEvent($entityInstance);
-            $this->container->get('event_dispatcher')->dispatch($event);
-            $context->getEntity()->setInstance($entityInstance);
-            if ($event->isPropagationStopped()) {
-                return $event->getResponse();
-            }*/
-            $count = count($toDelivered);
-            if ($count > 0) {
-                $this->addFlash('success',sprintf('Added %d mission from %s', $count, $entityInstance->getPickupPlace()->getName()) );
-            }
+            $this->addFlash('success',sprintf('Added %d mission from %s', $newMissionCount, $entityInstance->getPickupPlace()->getName()) );
 
             return $this->redirectToRoute('admin_vehicle_index');
         }
@@ -145,14 +141,7 @@ class MultiMissionCrudController extends AbstractCrudController
             'new_form' => $newForm,
         ]));
 
-        /*$event = new AfterCrudActionEvent($context, $responseParameters);
-        $this->container->get('event_dispatcher')->dispatch($event);
-        if ($event->isPropagationStopped()) {
-            return $event->getResponse();
-        }*/
-
         return $responseParameters;
     }
-
 
 }

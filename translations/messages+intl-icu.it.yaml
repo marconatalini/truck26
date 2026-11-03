@@ -109,6 +109,17 @@ entities:
             address.city: Comune
             address.province: Provincia
             note: Note
+    App\Entity\PackageAspect:
+        singular: Merce
+        plural: Merce
+        properties:
+            id: id
+            length: Lunghezza
+            width: Larghezza
+            height: Altezza
+            weight: Peso
+            aspect: Aspetto
+            scope: Visibilità
     App\Entity\Package:
         singular: Merce
         plural: Merce
@@ -191,3 +202,4 @@ Remember me: 'Ricordami'
 Sign in: 'Accedi'
 Details: Dettagli
 no.pictures: 'Nessuna immagine'
+scope.help: 'Vuoto: visibile sempre. <br>Single: visibile SOLO su inserimento commessa <br>Multi: visibile SOLO su inserimento multiplo'

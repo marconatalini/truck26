@@ -59,7 +59,7 @@ class Mission
 
     #[ORM\ManyToOne]
     #[ORM\JoinColumn(nullable: false)]
-    #[Assert\NotNull()]
+    #[Assert\NotNull(groups: ['Default','multiPicking'])]
     private ?Place $pickupPlace = null;
 
     #[ORM\ManyToOne]
@@ -77,6 +77,7 @@ class Mission
     private ?bool $delivered = false;
 
     #[ORM\ManyToOne]
+    #[Assert\NotNull(groups: ['multiPicking'])]
     private ?Vehicle $pickingVehicle = null;
 
     #[ORM\ManyToOne]

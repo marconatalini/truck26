@@ -73,6 +73,7 @@ class DashboardController extends AbstractDashboardController
 
         yield MenuItem::section('Settings');
         yield MenuItem::linkTo(UserCrudController::class, null, 'fas fa-users');
+        yield MenuItem::linkTo(PackageAspectCrudController::class, null, 'fas fa-list');
         yield MenuItem::linkToLogout('Logout', 'fas fa-sign-out-alt');
     }
 

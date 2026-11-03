@@ -9,21 +9,6 @@ use Symfony\Component\Validator\Constraints as Assert;
 #[ORM\Entity(repositoryClass: PackageRepository::class)]
 class Package
 {
-    public const ASPECTS = ['bancale', 'scatola', 'gabbia', 'fascio'];
-    public const DEFAULTS = [
-        'bancale' => '1200x800x1000x300',
-        'scatola' => '300x500x400x25',
-        'gabbia' => '1000x1000x1000x500',
-        'fascio' => '100x2500x100x20'];
-
-    public function setDefaults(string $aspect): void
-    {
-        $this->aspect = $aspect;
-        $this->width = explode("x", self::DEFAULTS[$aspect])[0];
-        $this->length = explode("x", self::DEFAULTS[$aspect])[1];
-        $this->height = explode("x", self::DEFAULTS[$aspect])[2];
-        $this->weight = explode("x", self::DEFAULTS[$aspect])[3];
-    }
 
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -42,14 +27,15 @@ class Package
     #[ORM\Column]
     private ?int $weight = 0;
 
-    #[ORM\Column(length: 50, nullable: true)]
-    private ?string $aspect = null;
-
     #[ORM\ManyToOne(inversedBy: 'packages')]
     private ?Mission $mission = null;
 
     #[ORM\Column]
     private int $quantity = 1;
+
+    #[ORM\ManyToOne]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?PackageAspect $aspect = null;
 
     public function getId(): ?int
     {
@@ -103,19 +89,7 @@ class Package
 
         return $this;
     }
-
-    public function getAspect(): ?string
-    {
-        return $this->aspect;
-    }
-
-    public function setAspect(?string $aspect): self
-    {
-        $this->aspect = $aspect;
-
-        return $this;
-    }
-
+    
     public function getMission(): ?Mission
     {
         return $this->mission;
@@ -143,6 +117,18 @@ class Package
     public function __toString(): string
     {
         return sprintf('%d %s da %sKg (%d x %d x %d)', $this->quantity, $this->aspect, $this->weight, $this->length, $this->width, $this->height);
+    }
+
+    public function getAspect(): ?PackageAspect
+    {
+        return $this->aspect;
+    }
+
+    public function setAspect(?PackageAspect $aspect): static
+    {
+        $this->aspect = $aspect;
+
+        return $this;
     }
 
 

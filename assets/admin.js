@@ -27,7 +27,9 @@ document.addEventListener('DOMContentLoaded', function(){
     addCreateFilterTomselect();
 })
 
-document.addEventListener('ea.collection.item-added', function() {
+document.addEventListener('ea.autocomplete.connect', function() {
     addCreateFilterTomselect();
 })
+
+
 

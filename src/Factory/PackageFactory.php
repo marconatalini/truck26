@@ -10,6 +10,21 @@ use Zenstruck\Foundry\Persistence\PersistentObjectFactory;
  */
 final class     PackageFactory extends PersistentObjectFactory
 {
+    const ASPECTS = ['bancale', 'scatola', 'gabbia', 'fascio'];
+    const PACKAGE_DEFAULTS = [
+        'bancale' => '1200x800x1000x300',
+        'scatola' => '300x500x400x25',
+        'gabbia' => '1000x1000x1000x500',
+        'fascio' => '100x2500x100x20'];
+
+    private function setDefaults(Package $package, string $aspect): void
+    {
+        $package->setWidth(explode("x", self::PACKAGE_DEFAULTS[$aspect])[0]);
+        $package->setLength(explode("x", self::PACKAGE_DEFAULTS[$aspect])[1]);
+        $package->setHeight(explode("x", self::PACKAGE_DEFAULTS[$aspect])[2]);
+        $package->setWeight(explode("x", self::PACKAGE_DEFAULTS[$aspect])[3]);
+    }
+
     /**
      * @see https://symfony.com/bundles/ZenstruckFoundryBundle/current/index.html#factories-as-services
      *
@@ -36,7 +51,7 @@ final class     PackageFactory extends PersistentObjectFactory
 
         return [
             'quantity' => self::faker()->randomNumber(1,true),
-            'aspect' => self::faker()->randomElement(Package::ASPECTS)
+            'aspect' => self::faker()->randomElement(self::ASPECTS)
         ];
     }
 
@@ -48,7 +63,7 @@ final class     PackageFactory extends PersistentObjectFactory
     {
         return $this
              ->afterInstantiate(function(Package $package): void {
-                 $package->setDefaults($package->getAspect());
+                 $this->setDefaults($package, $package->getAspect());
              })
         ;
     }

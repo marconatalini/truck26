@@ -8,3 +8,5 @@ log.overlap.error: >-
     }
 place.not.unique: 'Nome luogo già utilizzato. Aggiungi un suffisso per la filiale'
 address.not.unique: 'Questo indirizzo, comune e provincia sono già registrati.'
+packages.min.message: 'La lista merce deve avere almeno 1 elemento.'
+invalid.place.regex: 'Un nuovo luogo deve avere formato: \"Nome - Paese (prov)\"'

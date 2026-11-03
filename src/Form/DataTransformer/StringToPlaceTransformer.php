@@ -47,11 +47,14 @@ class StringToPlaceTransformer implements DataTransformerInterface
 
         $regex = "/^(.+)\s-\s(.*)\s\(([A-Z]{2})\)$/";
 
-        if (preg_match($regex, $value, $matches)) {
+        if (preg_match($regex, $value, $matches) == 1) {
             // $matches[0] contiene l'intera stringa che ha superato il controllo
             $name = $matches[1]; // Primo gruppo (.+)
             $city = $matches[2]; // Secondo gruppo (.*)
             $province = $matches[3]; // Terzo gruppo ([A-Z]{2})
+        } else {
+            // No matter if createFilter is enabled on tomselect
+            throw new TransformationFailedException('invalid.place.regex');
         }
 
         $place = new Place();
