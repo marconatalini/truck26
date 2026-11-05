@@ -115,7 +115,7 @@ class MissionRepository extends ServiceEntityRepository
         $qb = $this->createQueryBuilder('m')
             ->leftjoin('m.pickupPlace', 'pp')
             ->leftjoin('m.deliveryPlace', 'dp')
-            ->leftjoin('m.pictures', 'pic')
+//            ->leftjoin('m.pictures', 'pic')
             ->select('m.id','m.pickup_at as start','m.weight','m.status','m.picked','m.area','m.express',
                 'pp.name as pickupPlaceName', 'dp.name as deliveryPlaceName', "'picking' as type",
             )

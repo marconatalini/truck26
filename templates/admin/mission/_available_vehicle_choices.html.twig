@@ -4,8 +4,8 @@
         {{ stimulus_target('calendar', 'vehicleChoice') }}>
     {% for vehicle in vehicles %}
         <option value="{{ vehicle.id }}"
-            data-picking-url="{{ path('admin_mission_picking_vehicle_mission', {id: vehicle.id}) }}"
-            data-delivering-url="{{ path('admin_mission_delivering_vehicle_mission', {id: vehicle.id}) }}"
+            data-picking-url="{{ path('admin_mission_picking_vehicle', {vehicle_id: vehicle.id}) }}"
+            data-delivering-url="{{ path('admin_mission_delivering_vehicle', {vehicle_id: vehicle.id}) }}"
             >{{ vehicle.plate }} {{ vehicle.model }}</option>
     {% else %}
         <option value="">{{ 'novehicle.avaible'|trans }}</option>

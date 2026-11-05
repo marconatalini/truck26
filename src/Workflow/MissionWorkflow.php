@@ -32,6 +32,7 @@ class MissionWorkflow
     {
         $mission->setPickupAt(null);
         $mission->setScheduledAt(null);
+        $mission->setPickingVehicle(null);
         $this->workflow->apply($mission, MissionTransition::MISSION_UNASSIGN);
         $this->missionRepository->save($mission, flush: true);
     }
@@ -62,6 +63,7 @@ class MissionWorkflow
     {
         $mission->setDeliveryAt(null);
         $mission->setScheduledAt(null);
+        $mission->setDeliveringVehicle(null);
         $this->workflow->apply($mission, MissionTransition::MISSION_UNLOAD);
         $this->missionRepository->save($mission, flush: true);
     }

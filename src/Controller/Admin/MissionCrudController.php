@@ -30,6 +30,7 @@ use EasyCorp\Bundle\EasyAdminBundle\Field\IdField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\IntegerField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextareaField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
+use Symfony\Bridge\Doctrine\Attribute\MapEntity;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -173,8 +174,9 @@ class MissionCrudController extends AbstractCrudController
         return $this->redirectToRoute('admin_mission_index');
     }
 
-    #[AdminRoute('/picking/{id}')]
-    public function pickingVehicleMission(Vehicle $vehicle, Request $request): JsonResponse
+    #[AdminRoute('/picking/{vehicle_id}')]
+    public function pickingVehicle(
+        #[MapEntity(class: Vehicle::class, id: 'vehicle_id')] $vehicle, Request $request): JsonResponse
     {
         $start = $request->query->get('start');
         $end = $request->query->get('end');
@@ -185,8 +187,9 @@ class MissionCrudController extends AbstractCrudController
         return $this->json($result);
     }
 
-    #[AdminRoute('/delivering/{id}')]
-    public function deliveringVehicleMission(Vehicle $vehicle, Request $request): JsonResponse
+    #[AdminRoute('/delivering/{vehicle_id}')]
+    public function deliveringVehicle(
+        #[MapEntity(class: Vehicle::class, id: 'vehicle_id')] $vehicle, Request $request): JsonResponse
     {
         $start = $request->query->get('start');
         $end = $request->query->get('end');
