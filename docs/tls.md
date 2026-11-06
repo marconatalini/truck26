@@ -29,6 +29,20 @@ docker compose cp php:/data/caddy/pki/authorities/local/root.crt %TEMP%/root.crt
 
 <!-- markdownlint-enable MD013 -->
 
+### Firefox
+
+Firefox uses its own trust store. Either import `root.crt` in
+`Settings > Privacy & Security > View Certificates > Authorities`,
+or set `security.enterprise_roots.enabled` to `true` in `about:config`
+to make Firefox trust the authorities of the system trust store.
+
+The authority is regenerated when the `caddy_data` volume is removed
+(e.g. with `docker compose down -v`).
+The new authority has the same name as the previous one,
+so if Firefox still trusts the old one, it shows `SEC_ERROR_BAD_SIGNATURE`.
+Delete the `Caddy Local Authority` entry in the Authorities tab,
+then trust the new `root.crt`.
+
 ## Using Custom TLS Certificates
 
 By default, Caddy will automatically generate TLS certificates using Let's Encrypt
@@ -80,7 +94,8 @@ variables and starting the project with this command:
 
 ```console
 SERVER_NAME=http://localhost \
-MERCURE_PUBLIC_URL=http://localhost/.well-known/mercure \
+DEFAULT_URI=http://localhost \
+CADDY_MERCURE_PUBLIC_URL=http://localhost/.well-known/mercure \
 docker compose up --wait
 ```
 

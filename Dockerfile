@@ -15,8 +15,6 @@ SHELL ["/bin/bash", "-euxo", "pipefail", "-c"]
 
 WORKDIR /app
 
-VOLUME /app/var/
-
 # persistent deps
 # hadolint ignore=DL3008
 RUN <<-EOF
@@ -62,36 +60,40 @@ COPY --link frankenphp/Caddyfile /etc/frankenphp/Caddyfile
 
 ENTRYPOINT ["docker-entrypoint"]
 
-HEALTHCHECK --start-period=60s CMD php -r 'exit(false === @file_get_contents("http://localhost:2019/metrics", context: stream_context_create(["http" => ["timeout" => 5]])) ? 1 : 0);'
+HEALTHCHECK --start-period=60s CMD ["php", "-r", "exit(false === @file_get_contents('http://localhost:2019/metrics', context: stream_context_create(['http' => ['timeout' => 5]])) ? 1 : 0);"]
 CMD [ "frankenphp", "run", "--config", "/etc/frankenphp/Caddyfile" ]
 
 # Dev FrankenPHP image
 FROM frankenphp_base AS frankenphp_dev
+
+# Repeated until hadolint inherits the parent stage SHELL: https://github.com/hadolint/hadolint/pull/1258
+SHELL ["/bin/bash", "-euxo", "pipefail", "-c"]
 
 ENV APP_ENV=dev
 ENV XDEBUG_MODE=off
 ENV FRANKENPHP_WORKER_CONFIG=watch
 
 # dev dependencies
-# hadolint ignore=DL3008
 RUN <<-EOF
 	mv "$PHP_INI_DIR/php.ini-development" "$PHP_INI_DIR/php.ini"
-	apt-get update
-	apt-get install -y --no-install-recommends \
-		aggregate \
-		curl \
-		dnsmasq \
-		dnsutils \
-		iproute2 \
-		ipset \
-		iptables \
-		jq \
-		sudo
 	install-php-extensions xdebug
-	rm -rf /var/lib/apt/lists/*
 	useradd -m -s /bin/bash nonroot
-	echo "nonroot ALL=(ALL) NOPASSWD:ALL" > /etc/sudoers.d/nonroot
 	git config --system --add safe.directory /app
+EOF
+
+# Symfony Language Server, for editors and AI agents that don't bundle it themselves
+# https://github.com/symfony/language-tools
+ARG TARGETARCH
+RUN <<-EOF
+	case "$TARGETARCH" in
+		amd64) lsp_arch=x64 ;;
+		arm64) lsp_arch=arm64 ;;
+		*) echo "unsupported architecture: $TARGETARCH"; exit 1 ;;
+	esac
+	# The release URL redirects to the latest tag, no API token nor rate limit involved
+	lsp_version=$(basename "$(curl -fsSLI -o /dev/null -w '%{url_effective}' https://github.com/symfony/language-tools/releases/latest)")
+	curl -fsSL "https://github.com/symfony/language-tools/releases/download/$lsp_version/symfony-lsp-$lsp_version-linux-$lsp_arch.tar.gz" \
+		| tar -xz -C /usr/local/bin --strip-components=1 --wildcards '*/symfony-lsp'
 EOF
 
 COPY --link frankenphp/conf.d/20-app.dev.ini $PHP_INI_DIR/app.conf.d/
@@ -100,6 +102,9 @@ CMD [ "frankenphp", "run", "--config", "/etc/frankenphp/Caddyfile", "--watch" ]
 
 # Builder for the prod FrankenPHP image
 FROM frankenphp_base AS frankenphp_prod_builder
+
+# Repeated until hadolint inherits the parent stage SHELL: https://github.com/hadolint/hadolint/pull/1258
+SHELL ["/bin/bash", "-euxo", "pipefail", "-c"]
 
 ENV APP_ENV=prod
 
@@ -122,11 +127,13 @@ RUN <<-EOF
 	if [ -f importmap.php ]; then
 		php bin/console asset-map:compile
 	fi
-	chmod +x bin/console; sync
+	chmod +x bin/console
+	chmod -R g=u var
+	sync
 EOF
 
 # Collect shared libraries needed by FrankenPHP and PHP extensions
-# hadolint ignore=DL3008,SC3054,DL4006
+# hadolint ignore=DL3008,SC3054
 RUN <<-'EOF'
 	apt-get update
 	apt-get install -y --no-install-recommends libtree
@@ -138,7 +145,6 @@ RUN <<-'EOF'
 			[ -f "$lib" ] && cp -n "$lib" /tmp/libs/
 		done
 	done
-	sed -i 's/opcache.preload_user = root/opcache.preload_user = www-data/' "$PHP_INI_DIR/app.conf.d/20-app.prod.ini"
 	rm -rf /var/lib/apt/lists/*
 EOF
 
@@ -164,10 +170,11 @@ COPY --from=frankenphp_prod_builder /etc/frankenphp/Caddyfile /etc/frankenphp/Ca
 
 # CA certificates for TLS, file/libmagic for Symfony MIME type detection
 COPY --from=frankenphp_prod_builder /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/ca-certificates.crt
+COPY --from=frankenphp_prod_builder /etc/ssl/openssl.cnf /etc/ssl/openssl.cnf
 COPY --from=frankenphp_prod_builder /usr/bin/file /usr/bin/file
 COPY --from=frankenphp_prod_builder /usr/lib/file/magic.mgc /usr/lib/file/magic.mgc
 
-ENV XDG_CONFIG_HOME=/config XDG_DATA_HOME=/data
+ENV  OPENSSL_CONF=/etc/ssl/openssl.cnf XDG_CONFIG_HOME=/config XDG_DATA_HOME=/data SSL_CERT_FILE=/etc/ssl/certs/ca-certificates.crt
 
 RUN <<-EOF
 	mkdir -p /data/caddy /config/caddy
@@ -176,23 +183,19 @@ RUN <<-EOF
 	find / -perm /6000 -type f -exec chmod a-s {} + 2>/dev/null || true
 EOF
 
-COPY --link --exclude=var --exclude=public/upload --exclude=public/media --from=frankenphp_prod_builder /app /app
-COPY --chown=www-data:www-data --from=frankenphp_prod_builder /app/var /app/var
-COPY --chown=www-data:www-data --from=frankenphp_prod_builder /app/public/upload /app/public/upload
-COPY --chown=www-data:www-data --from=frankenphp_prod_builder /app/public/media /app/public/media
-
-# Ensure www-data has write (w) and traversal (x) permissions on copied directories
-# RUN chmod -R 775 /app/public/upload /app/public/media
+COPY --link --exclude=var --from=frankenphp_prod_builder /app /app
+# Group 0 + g=u for arbitrary-UID runtimes (e.g. OpenShift).
+COPY --chown=www-data:0 --from=frankenphp_prod_builder /app/var /app/var
+RUN chmod g=u /app/var
 
 COPY --link --chmod=755 frankenphp/docker-entrypoint.sh /usr/local/bin/docker-entrypoint
 
-VOLUME /app/var/
-
-USER www-data
+# www-data, numeric so runtimes can verify runAsNonRoot
+USER 33
 
 WORKDIR /app
 
 ENTRYPOINT ["docker-entrypoint"]
 
-HEALTHCHECK --start-period=60s CMD php -r 'exit(false === @file_get_contents("http://localhost:2019/metrics", context: stream_context_create(["http" => ["timeout" => 5]])) ? 1 : 0);'
+HEALTHCHECK --start-period=60s CMD ["php", "-r", "exit(false === @file_get_contents('http://localhost:2019/metrics', context: stream_context_create(['http' => ['timeout' => 5]])) ? 1 : 0);"]
 CMD [ "frankenphp", "run", "--config", "/etc/frankenphp/Caddyfile" ]

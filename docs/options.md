@@ -11,7 +11,47 @@ You can customize the Docker build process using these environment variables.
 
 Use the `SYMFONY_VERSION` environment variable to select a specific Symfony version.
 
-For instance, use the following command to install Symfony 6.4:
+### Install Symfony 7.4+
+
+On Linux:
+
+```console
+SYMFONY_VERSION=7.4.* docker compose up --wait
+```
+
+On Windows:
+
+```console
+set SYMFONY_VERSION=7.4.* && docker compose up --wait&set SYMFONY_VERSION=
+```
+
+### Install Symfony pre-7.4
+
+If you're using Symfony 7.3 or earlier with FrankenPHP in worker mode,
+you need to prepare two files **before** running `docker compose up`.
+
+In `frankenphp/docker-entrypoint.sh`, add `runtime/frankenphp-symfony` to the existing `composer require` line:
+
+```diff
+- composer require "php:>=$PHP_VERSION"
++ composer require "php:>=$PHP_VERSION" runtime/frankenphp-symfony
+```
+
+In `frankenphp/Caddyfile`, add `env APP_RUNTIME Runtime\FrankenPhpSymfony\Runtime` in the `worker` section:
+
+<!-- markdownlint-disable MD010 -->
+
+```diff
+ worker {
+ 	file ./public/index.php
++	env APP_RUNTIME Runtime\FrankenPhpSymfony\Runtime
+ 	{$FRANKENPHP_WORKER_CONFIG}
+ }
+```
+
+<!-- markdownlint-enable MD010 -->
+
+Then start the project:
 
 On Linux:
 
@@ -24,28 +64,6 @@ On Windows:
 ```console
 set SYMFONY_VERSION=6.4.* && docker compose up --wait&set SYMFONY_VERSION=
 ```
-
-<!-- markdownlint-disable MD010 -->
-
-> [!NOTE]
->
-> If you're using Symfony 7.3 or earlier with FrankenPHP in worker mode, you also need to follow these steps
->
-> ```console
-> composer require runtime/frankenphp-symfony
-> ```
->
-> Add `env APP_RUNTIME Runtime\FrankenPhpSymfony\Runtime` in the `frankenphp/Caddyfile` in the `worker` section.
->
-> ```diff
->  worker {
->  	file ./public/index.php
-> +	env APP_RUNTIME Runtime\FrankenPhpSymfony\Runtime
->  	{$FRANKENPHP_WORKER_CONFIG}
->  }
-> ```
-
-<!-- markdownlint-enable MD010 -->
 
 ## Installing Development Versions of Symfony
 
@@ -97,20 +115,21 @@ to inject options block, directive or configuration.
 
 <!-- markdownlint-disable MD013 -->
 
-| Environment variable            | Description                                                                                                                                                                             | Default value |
-| ------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------- |
-| `CADDY_GLOBAL_OPTIONS`          | the [global options block](https://caddyserver.com/docs/caddyfile/options#global-options), one per line                                                                                 |               |
-| `CADDY_EXTRA_CONFIG`            | the [snippet](https://caddyserver.com/docs/caddyfile/concepts#snippets) or the [named-routes](https://caddyserver.com/docs/caddyfile/concepts#named-routes) options block, one per line |               |
-| `CADDY_SERVER_EXTRA_DIRECTIVES` | the [`Caddyfile` directives](https://caddyserver.com/docs/caddyfile/concepts#directives)                                                                                                |               |
-| `CADDY_SERVER_LOG_OPTIONS`      | the [server log options block](https://caddyserver.com/docs/caddyfile/directives/log), one per line                                                                                     |               |
-| `SERVER_NAME`                   | the server name or address                                                                                                                                                              | `localhost`   |
-| `FRANKENPHP_CONFIG`             | a list of extra [FrankenPHP global directives](https://frankenphp.dev/docs/config/#caddyfile-config), one per line                                                                      |               |
-| `FRANKENPHP_WORKER_CONFIG`      | a list of extra [FrankenPHP worker directives](https://frankenphp.dev/docs/config/#caddyfile-config), one per line                                                                      |               |
-| `MERCURE_PUBLISHER_JWT_KEY`     | the JWT key to use for publishers                                                                                                                                                       |               |
-| `MERCURE_PUBLISHER_JWT_ALG`     | the JWT algorithm to use for publishers                                                                                                                                                 | `HS256`       |
-| `MERCURE_SUBSCRIBER_JWT_KEY`    | the JWT key to use for subscribers                                                                                                                                                      |               |
-| `MERCURE_SUBSCRIBER_JWT_ALG`    | the JWT algorithm to use for subscribers                                                                                                                                                | `HS256`       |
-| `MERCURE_EXTRA_DIRECTIVES`      | a list of extra [Mercure directives](https://mercure.rocks/docs/hub/config), one per line                                                                                               |               |
+| Environment variable            | Description                                                                                                                                                                             | Default value       |
+| ------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------- |
+| `CADDY_GLOBAL_OPTIONS`          | the [global options block](https://caddyserver.com/docs/caddyfile/options#global-options), one per line                                                                                 |                     |
+| `CADDY_EXTRA_CONFIG`            | the [snippet](https://caddyserver.com/docs/caddyfile/concepts#snippets) or the [named-routes](https://caddyserver.com/docs/caddyfile/concepts#named-routes) options block, one per line |                     |
+| `CADDY_SERVER_EXTRA_DIRECTIVES` | the [`Caddyfile` directives](https://caddyserver.com/docs/caddyfile/concepts#directives)                                                                                                |                     |
+| `CADDY_SERVER_LOG_OPTIONS`      | the [server log options block](https://caddyserver.com/docs/caddyfile/directives/log), one per line                                                                                     |                     |
+| `SERVER_NAME`                   | the server name or address                                                                                                                                                              | `localhost`         |
+| `FRANKENPHP_CONFIG`             | a list of extra [FrankenPHP global directives](https://frankenphp.dev/docs/config/#caddyfile-config), one per line                                                                      |                     |
+| `FRANKENPHP_WORKER_CONFIG`      | a list of extra [FrankenPHP worker directives](https://frankenphp.dev/docs/config/#caddyfile-config), one per line                                                                      |                     |
+| `MERCURE_PUBLISHER_JWT_KEY`     | the JWT key to use for publishers                                                                                                                                                       |                     |
+| `MERCURE_PUBLISHER_JWT_ALG`     | the JWT algorithm to use for publishers                                                                                                                                                 | `HS256`             |
+| `MERCURE_SUBSCRIBER_JWT_KEY`    | the JWT key to use for subscribers                                                                                                                                                      |                     |
+| `MERCURE_SUBSCRIBER_JWT_ALG`    | the JWT algorithm to use for subscribers                                                                                                                                                | `HS256`             |
+| `MERCURE_TRUSTED_ISSUERS`       | the trusted [issuer](https://mercure.rocks/docs/hub/config) of the JWTs (their `iss` claim)                                                                                             | `https://localhost` |
+| `MERCURE_EXTRA_DIRECTIVES`      | a list of extra [Mercure directives](https://mercure.rocks/docs/hub/config), one per line                                                                                               |                     |
 
 <!-- markdownlint-enable MD013 -->
 
