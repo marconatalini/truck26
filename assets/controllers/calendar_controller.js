@@ -10,8 +10,10 @@ import itLocale from '@fullcalendar/core/locales/it';
 
 let currentVehicleId = 0;
 let notBeforeModal;
+let settings;
 export default class extends Controller {
-    static targets = ['checkbox', 'vehicleChoice', 'draggable', 'viewUrl', 'dropUrl',
+    static targets = ['settings',
+        'checkbox', 'vehicleChoice', 'draggable', 'viewUrl', 'dropUrl',
         'moveUrl', 'mapUrl', 'chartUrl', 'pdfUrl', 'calendarEl',
         'iframeMap', 'iframeChart', 'notBeforeModal'
     ]
@@ -21,6 +23,13 @@ export default class extends Controller {
     connect() {
         // this.element.textContent = 'Hello Stimulus! Edit me in assets/controllers/hello_controller.js';
         notBeforeModal = new bootstrap.Modal(this.notBeforeModalTarget);
+    }
+
+    settingsTargetConnected(el) {
+        let data = this.settingsTarget.dataset.settings;
+        settings = Object.fromEntries(
+            JSON.parse(data).map(item => [item.key, item.value])
+        );
     }
 
     notBeforeModalConnected(el) {
@@ -43,6 +52,8 @@ export default class extends Controller {
         let pdfUrl = this.pdfUrlTarget.dataset.url;
         let iframeMap = this.iframeMapTarget;
         let iframeChart = this.iframeChartTarget;
+
+
 
         let calendar = new Calendar(el, {
             plugins: [dayGridPlugin, interactionPlugin, bootstrapPlugin, listPlugin, timeGridPlugin],
@@ -103,11 +114,11 @@ export default class extends Controller {
                     buttonText: '3 GG'
                 },
             },
-            slotDuration: '00:05:00',
-            slotMinTime: '07:00:00',
-            slotMaxTime: '19:00:00',
+            slotDuration: settings.CALENDAR_SLOT_DURATION,
+            slotMinTime: settings.CALENDAR_SLOT_MIN_TIME,
+            slotMaxTime: settings.CALENDAR_SLOT_MAX_TIME,
             displayEventTime: false,
-            defaultTimedEventDuration: '00:15',
+            defaultTimedEventDuration: settings.CALENDAR_EVENT_DURATION,
             locales: [itLocale],
             // locale: 'it',
             timeZone: 'Europe/Rome',

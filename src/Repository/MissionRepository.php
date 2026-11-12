@@ -78,8 +78,8 @@ class MissionRepository extends ServiceEntityRepository
     {
         return $this->createQueryBuilder('m')
             ->select('SUM(m.weight) as total_weight', 'SUM(m.area) as total_area')
-            ->andWhere('m.pickingVehicle = :vehicle AND m.picked = true')
-            ->andWhere('m.deliveringVehicle = :vehicle AND m.delivered = false')
+            ->where('m.pickingVehicle = :vehicle AND m.picked = true')
+            ->orWhere('m.deliveringVehicle = :vehicle AND m.delivered = false')
             ->setParameter('vehicle', $vehicle)
             ->getQuery()
             ->getScalarResult();

@@ -5,7 +5,6 @@ namespace App\Controller\Admin;
 use App\Repository\DriverLogRepository;
 use App\Repository\MissionRepository;
 use App\Repository\PlaceRepository;
-use App\Repository\VehicleRepository;
 use App\Workflow\State\MissionState;
 use EasyCorp\Bundle\EasyAdminBundle\Attribute\AdminDashboard;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
@@ -55,7 +54,6 @@ class DashboardController extends AbstractDashboardController
             ;
     }
 
-
     public function configureMenuItems(): iterable
     {
         yield MenuItem::linkToDashboard('Dashboard', 'fa fa-home');
@@ -74,6 +72,7 @@ class DashboardController extends AbstractDashboardController
         yield MenuItem::section('Settings');
         yield MenuItem::linkTo(UserCrudController::class, null, 'fas fa-users');
         yield MenuItem::linkTo(PackageAspectCrudController::class, null, 'fas fa-list');
+        yield MenuItem::linkTo(CalendarSettingCrudController::class, 'Calendar', 'fas fa-calendar-days');
         yield MenuItem::linkToLogout('Logout', 'fas fa-sign-out-alt');
     }
 

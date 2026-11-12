@@ -1,0 +1,6 @@
+{{ place.name }}<br>
+{{ place.address.addressLine1 }} {{ place.address.addressLine2 }}<br>
+{{ place.address.city }} ({{ place.address.province }})<br>
+{% if place.note %}
+    <p class="text-muted mt-2 mb-0 border-top border-dark">{{ place.note }}</p>
+{% endif %}

@@ -2,12 +2,15 @@
 
 {% block main %}
     <div class="row" {{ stimulus_controller('calendar') }}>
+        <div data-settings="{{ render(path('app_setting_calendar')) }}" {{ stimulus_target('calendar', 'settings') }}></div>
+
         <div data-url="{{ absolute_url(path('admin_mission_detail', {entityId : 1})) }}" {{ stimulus_target('calendar', 'viewUrl') }}></div>
         <div data-url="{{ absolute_url(path('admin_mission_calendar_drop' , {id: 1})) }}" {{ stimulus_target('calendar', 'dropUrl') }}></div>
         <div data-url="{{ absolute_url(path('admin_mission_calendar_move', {id: 1})) }}" {{ stimulus_target('calendar', 'moveUrl') }}></div>
         <div data-url="{{ absolute_url(path('admin_vehicle_map', {id: 1})) }}" {{ stimulus_target('calendar', 'mapUrl') }}></div>
         <div data-url="{{ absolute_url(path('admin_vehicle_chart', {id: 1})) }}" {{ stimulus_target('calendar', 'chartUrl') }}></div>
         <div data-url="{{ absolute_url(path('admin_vehicle_pdf', {id: 1})) }}" {{ stimulus_target('calendar', 'pdfUrl') }}></div>
+
 
         {% if start_missions|length > 0 or pending_missions|length > 0 %}
         <div class="col-3">
@@ -20,7 +23,6 @@
             {{ include('admin/mission/_available_vehicle_choices.html.twig') }}
             <div id="truck1-calendar" {{ stimulus_target('calendar', 'calendarEl') }}></div>
         </div>
-
 
         <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasMap" aria-labelledby="offcanvasMapLabel">
             <div class="offcanvas-header">

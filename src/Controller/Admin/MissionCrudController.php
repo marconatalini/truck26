@@ -10,6 +10,7 @@ use App\Form\PlaceType;
 use App\Form\UploadFileType;
 use App\Form\UploadImageType;
 use App\Repository\MissionRepository;
+use App\Repository\SettingRepository;
 use App\Repository\VehicleRepository;
 use App\Workflow\MissionWorkflow;
 use App\Workflow\State\MissionState;
@@ -107,8 +108,8 @@ class MissionCrudController extends AbstractCrudController
 
             FormField::addTab('Details','fas fa-list-check'),
             TextField::new('status')->setDisabled()->hideOnIndex()->setColumns(3),
-            BooleanField::new('delivered')->setColumns(3)->setDisabled(),
             BooleanField::new('picked')->setColumns(3)->setDisabled(),
+            BooleanField::new('delivered')->setColumns(3)->setDisabled(),
             DateTimeField::new('scheduled_at')->setColumns(3)->setDisabled(),
 
             FormField::addTab('Documents', 'fas fa-upload'),
@@ -267,7 +268,11 @@ class MissionCrudController extends AbstractCrudController
 
 
     #[AdminRoute('/management')]
-    public function management(MissionRepository $missionRepository, VehicleRepository $vehicleRepository): Response
+    public function management(
+        MissionRepository $missionRepository,
+        VehicleRepository $vehicleRepository,
+        SettingRepository $settingRepository,
+    ): Response
     {
         $missionsStart = $missionRepository->findMissionToManagedByStatus(MissionState::START);
         $missionsPending = $missionRepository->findMissionToManagedByStatus(MissionState::PENDING);

@@ -8,12 +8,11 @@
         <table class="table table-striped">
             <tbody>
                 <tr>
-                    <td><i class="fa-solid fa-truck-fast"></i></td>
-                    {% set place = mission.pickupPlace %}
-                    <td>{{ place.name }}<br>
-                        {{ place.address.addressLine1 }} {{ place.address.addressLine2 }}<br>
-                        {{ place.address.city }} ({{ place.address.province }})<br>
+                    <td>
+                        <i class="fa-solid fa-truck-fast"></i>
                     </td>
+                    {% set place = mission.pickupPlace %}
+                    <td>{{ include('mission/_place.html.twig') }}</td>
                     <td class="align-middle text-center">
                         {% set destination = [place.address.addressLine1|url_encode, place.address.city|url_encode, place.address.province]|join('+') %}
                         <a href="https://www.google.com/maps/dir/?api=1&destination={{ destination }}"
@@ -31,10 +30,7 @@
                 <tr>
                     <td><i class="fa-solid fa-flag-checkered"></i></td>
                     {% set place = mission.deliveryPlace %}
-                    <td>{{ place.name }}<br>
-                        {{ place.address.addressLine1 }} {{ place.address.addressLine2 }}<br>
-                        {{ place.address.city }} ({{ place.address.province }})<br>
-                    </td>
+                    <td>{{ include('mission/_place.html.twig') }}</td>
                     <td class="align-middle text-center">
                         {% set destination = [place.address.addressLine1|url_encode, place.address.city|url_encode, place.address.province]|join('+') %}
                         <a href="https://www.google.com/maps/dir/?api=1&destination={{ destination }}"

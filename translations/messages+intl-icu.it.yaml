@@ -150,7 +150,14 @@ entities:
             password: Password
             firedAt: Licenziato
             roles: Ruoli
-
+    App\Entity\Setting:
+        singular: Setting
+        plural: Settings
+        properties:
+            id: id
+            description: descrizione
+            value: valore
+            key: chiave
 Mission: Missione
 Missions: Missioni
 Add: Aggiungi
@@ -203,3 +210,4 @@ Sign in: 'Accedi'
 Details: Dettagli
 no.pictures: 'Nessuna immagine'
 scope.help: 'Vuoto: visibile sempre. <br>Single: visibile SOLO su inserimento commessa <br>Multi: visibile SOLO su inserimento multiplo'
+reset.setting.confirmation: 'Vuoi impostare il valore iniziale?'
