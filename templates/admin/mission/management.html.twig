@@ -1,8 +1,15 @@
 {% extends "@EasyAdmin/page/content.html.twig" %}
 
+{% block search_wrapper %}
+    <div class="content-search"></div>
+{% endblock %}
+
+{% block content_header_wrapper %} {% endblock %}
+
 {% block main %}
-    <div class="row" {{ stimulus_controller('calendar') }}>
+    <div class="mt-3" {{ stimulus_controller('calendar') }}>
         <div data-settings="{{ render(path('app_setting_calendar')) }}" {{ stimulus_target('calendar', 'settings') }}></div>
+        <div data-logs="{{ render(path('app_driver_log')) }}" {{ stimulus_target('calendar', 'driverLogs') }}></div>
 
         <div data-url="{{ absolute_url(path('admin_mission_detail', {entityId : 1})) }}" {{ stimulus_target('calendar', 'viewUrl') }}></div>
         <div data-url="{{ absolute_url(path('admin_mission_calendar_drop' , {id: 1})) }}" {{ stimulus_target('calendar', 'dropUrl') }}></div>
@@ -11,17 +18,15 @@
         <div data-url="{{ absolute_url(path('admin_vehicle_chart', {id: 1})) }}" {{ stimulus_target('calendar', 'chartUrl') }}></div>
         <div data-url="{{ absolute_url(path('admin_vehicle_pdf', {id: 1})) }}" {{ stimulus_target('calendar', 'pdfUrl') }}></div>
 
-
-        {% if start_missions|length > 0 or pending_missions|length > 0 %}
-        <div class="col-3">
-            {{ include('admin/mission/_pending_missions.html.twig') }}
-        </div>
-        <div class="col-9 min-vh-100">
-        {% else %}
-        <div class="min-vh-100">
-        {% endif %}
-            {{ include('admin/mission/_available_vehicle_choices.html.twig') }}
-            <div id="truck1-calendar" {{ stimulus_target('calendar', 'calendarEl') }}></div>
+        <div class="row">
+            <div class="col-lg-3">
+                {{ include('admin/mission/_start_missions.html.twig') }}
+                {{ include('admin/mission/_pending_missions.html.twig') }}
+            </div>
+            <div class="col-lg-9 min-vh-100">
+                {{ include('admin/mission/_available_vehicle_choices.html.twig') }}
+                <div id="truck1-calendar" {{ stimulus_target('calendar', 'calendarEl') }}></div>
+            </div>
         </div>
 
         <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasMap" aria-labelledby="offcanvasMapLabel">

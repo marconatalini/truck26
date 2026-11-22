@@ -33,3 +33,13 @@ iframe#chartFrame{
     height: 100% !important;
 }
 
+/*remove MAP CHART PDF from calendar toolbar at SM*/
+div.fc-toolbar-chunk:nth-child(2) {
+    display: none;
+}
+
+@media (min-width: 576px) {
+    div.fc-toolbar-chunk:nth-child(2) {
+        display: block;
+    }
+}

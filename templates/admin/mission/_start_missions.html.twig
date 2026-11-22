@@ -1,0 +1,37 @@
+{% if start_missions|length > 0 %}
+    <div class="accordion" id="missions">
+        <div class="accordion-item">
+            <h2 class="accordion-header">
+                <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#picking" aria-expanded="true" aria-controls="collapseOne">
+                    {{ 'pickup'|trans|upper }}
+                </button>
+            </h2>
+            <div id="picking" class="accordion-collapse collapse show" data-bs-parent="#missions">
+                <div class="">
+                    {% for mission in start_missions %}
+                        <div class="border border-2 border-danger d-flex rounded-2 mb-1"
+                            {{ stimulus_target('calendar', 'draggable') }}
+                             data-event="{{ mission|json_encode() }}"
+                        >
+
+                            <a class="mx-2 my-auto" href="{{ path('admin_mission_detail', {entityId: mission.id}) }}"><i class="fa-regular fa-circle-question"></i></a>
+                            <p>{{ mission.pickupPlaceName }} > {{ mission.weight }}kg / {{ mission.area }}mq<br>
+                                {% if mission.express %}
+                                    <i class="fa-solid fa-truck-fast"></i>
+                                {% endif %}
+                                {{ mission.deliveryPlaceName}}
+                            </p>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+{% else %}
+    <h6>{{ 'no.start.mission'|trans }}</h6>
+{% endif %}
+
+
+
+
+

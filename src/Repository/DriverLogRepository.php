@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\DriverLog;
+use App\Entity\Vehicle;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\AbstractQuery;
 use Doctrine\Persistence\ManagerRegistry;
@@ -34,6 +35,22 @@ class DriverLogRepository extends ServiceEntityRepository
         ;
     }
 
+    public function findAllDriverLogsFromToday(): ?array
+    {
+        return $this->createQueryBuilder('dl')
+            ->leftJoin('dl.vehicle', 'v')
+            ->leftJoin('dl.driver', 'd')
+            ->select('v.id as vehicleId', 'd.username as driverName' , 'dl.startDate', 'dl.endDate')
+//            ->andWhere('dl.startDate <= :today')
+            ->andWhere('dl.endDate >= :today')
+            ->andWhere('dl.category = :category')
+            ->setParameter('today', new \DateTime('now'))
+            ->setParameter('category', 'drive')
+            ->getQuery()
+            ->getResult(AbstractQuery::HYDRATE_ARRAY)
+            ;
+    }
+
     public function findCalendarDriverLogs(string $startDate, string $endDate, UserInterface $user): ?array
     {
         return $this->createQueryBuilder('d')
@@ -49,14 +66,16 @@ class DriverLogRepository extends ServiceEntityRepository
         ;
     }
 
-    public function findOverlapsLog(DriverLog $driverLog): ?DriverLog
+    public function findDriverOverlapsLog(DriverLog $driverLog): ?DriverLog
     {
 
         $qb = $this->createQueryBuilder('d')
             ->andWhere('d.driver = :driver')
+//            ->andWhere('d.vehicle = :vehicle')
             ->andWhere('d.category = :category')
             ->andWhere('d.startDate <= :end AND d.endDate >= :start')
             ->setParameter('driver', $driverLog->getDriver())
+//            ->setParameter('vehicle', $driverLog->getVehicle())
             ->setParameter('category', $driverLog->getCategory())
             ->setParameter('start', $driverLog->getStartDate())
             ->setParameter('end', $driverLog->getEndDate())
@@ -72,6 +91,33 @@ class DriverLogRepository extends ServiceEntityRepository
         return $qb->setMaxResults(1)->getQuery()->getOneOrNullResult();
     }
 
+    public function findVehicleOverlapsLog(DriverLog $driverLog): ?DriverLog
+    {
+
+        $qb = $this->createQueryBuilder('d')
+//            ->andWhere('d.driver = :driver')
+            ->andWhere('d.vehicle = :vehicle')
+            ->andWhere('d.category = :category')
+            ->andWhere('d.startDate <= :end AND d.endDate >= :start')
+//            ->setParameter('driver', $driverLog->getDriver())
+            ->setParameter('vehicle', $driverLog->getVehicle())
+            ->setParameter('category', $driverLog->getCategory())
+            ->setParameter('start', $driverLog->getStartDate())
+            ->setParameter('end', $driverLog->getEndDate())
+        ;
+
+        if (null !== $driverLog->getId()) {
+            // prevent find the same Logs on update
+            $qb->andWhere('d.id != :id')
+                ->setParameter('id', $driverLog->getId())
+            ;
+        }
+
+        return $qb->setMaxResults(1)->getQuery()->getOneOrNullResult();
+    }
+
+
+
     public function findTodayLogs(): array
     {
         return $this->createQueryBuilder('d')
@@ -80,6 +126,19 @@ class DriverLogRepository extends ServiceEntityRepository
             ->setParameter('today', new \DateTime('now'))
             ->getQuery()
             ->getResult()
+            ;
+    }
+
+    public function findDriverByVehicleAndDate(Vehicle $vehicle, \DateTime $today): ?DriverLog
+    {
+        return $this->createQueryBuilder('d')
+            ->where('d.vehicle = :vehicle')
+            ->andWhere('d.startDate <= :today')
+            ->andWhere('d.endDate >= :today')
+            ->setParameter('vehicle', $vehicle)
+            ->setParameter('today', $today)
+            ->getQuery()
+            ->getOneOrNullResult()
             ;
     }
 }

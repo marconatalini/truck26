@@ -1,6 +1,7 @@
 import { Controller } from '@hotwired/stimulus';
 import "fullcalendar";
 import { Calendar } from '@fullcalendar/core';
+import momentTimezonePlugin from '@fullcalendar/moment-timezone'
 import dayGridPlugin from '@fullcalendar/daygrid';
 import timeGridPlugin from '@fullcalendar/timegrid';
 import listPlugin from '@fullcalendar/list';
@@ -10,9 +11,10 @@ import itLocale from '@fullcalendar/core/locales/it';
 
 let currentVehicleId = 0;
 let notBeforeModal;
-let settings;
+let customSettings;
+let driverLogs;
 export default class extends Controller {
-    static targets = ['settings',
+    static targets = ['settings', 'driverLogs',
         'checkbox', 'vehicleChoice', 'draggable', 'viewUrl', 'dropUrl',
         'moveUrl', 'mapUrl', 'chartUrl', 'pdfUrl', 'calendarEl',
         'iframeMap', 'iframeChart', 'notBeforeModal'
@@ -27,10 +29,17 @@ export default class extends Controller {
 
     settingsTargetConnected(el) {
         let data = this.settingsTarget.dataset.settings;
-        settings = Object.fromEntries(
+        customSettings = Object.fromEntries(
             JSON.parse(data).map(item => [item.key, item.value])
         );
     }
+
+    driverLogsTargetConnected(el) {
+        let data = this.driverLogsTarget.dataset.logs;
+        driverLogs = JSON.parse(data);
+    }
+
+
 
     notBeforeModalConnected(el) {
     }
@@ -53,10 +62,8 @@ export default class extends Controller {
         let iframeMap = this.iframeMapTarget;
         let iframeChart = this.iframeChartTarget;
 
-
-
-        let calendar = new Calendar(el, {
-            plugins: [dayGridPlugin, interactionPlugin, bootstrapPlugin, listPlugin, timeGridPlugin],
+        const fullCalendar = new Calendar(el, {
+            plugins: [momentTimezonePlugin, dayGridPlugin, interactionPlugin, bootstrapPlugin, listPlugin, timeGridPlugin],
             height: '95%',
             editable: true,
             droppable: true,
@@ -93,13 +100,12 @@ export default class extends Controller {
                         window.open(url, '_blank');
                     }
                 },
-
-
             },
             headerToolbar: {
                 left: 'title',
                 center: 'mapBtn chartBtn pdfBtn',
-                right: 'timeGridTwoDay timeGridThreeDay prev,next',
+                // right: 'timeGridTwoDay timeGridThreeDay prev,next',
+                right: 'prev,next',
             },
             initialView: 'timeGridDay',
             views: {
@@ -114,15 +120,16 @@ export default class extends Controller {
                     buttonText: '3 GG'
                 },
             },
-            slotDuration: settings.CALENDAR_SLOT_DURATION,
-            slotMinTime: settings.CALENDAR_SLOT_MIN_TIME,
-            slotMaxTime: settings.CALENDAR_SLOT_MAX_TIME,
+            slotDuration: customSettings.CALENDAR_SLOT_DURATION,
+            slotMinTime: customSettings.CALENDAR_SLOT_MIN_TIME,
+            slotMaxTime: customSettings.CALENDAR_SLOT_MAX_TIME,
             displayEventTime: false,
-            defaultTimedEventDuration: settings.CALENDAR_EVENT_DURATION,
+            allDaySlot: false,
+            defaultTimedEventDuration: customSettings.CALENDAR_EVENT_DURATION,
             locales: [itLocale],
             // locale: 'it',
             timeZone: 'Europe/Rome',
-            hiddenDays: [0, ], //hide sunday
+            hiddenDays: customSettings.CALENDAR_HIDDEN_DAYS.split(",").map(Number), //hide sunday
             // eventSources: this.getActiveEventSource(),
             eventSources: this.getVehicleEventSource(),
             eventClick: function(info) {
@@ -158,6 +165,30 @@ export default class extends Controller {
                     return reason;
                 }))
 
+            },
+            // datesSet viene eseguito ogni volta che cambia lavista o si naviga con next/prev
+            datesSet: (info) => {
+                // console.log(info.startStr, info.endStr);
+            },
+            // dayHeaderDidMount eseguito quando cambia la vista
+            dayHeaderDidMount: (info) => {
+                if (info.isPast) {return;}
+                let vehicleId = parseInt(this.vehicleChoiceTarget.value);
+                let item = driverLogs.find(item => item.vehicleId === vehicleId
+                    && this.parsePhpDate(item.endDate) >= info.date
+                );
+                let driverText = '!! Nessuno !!';
+                const e = document.createElement('a');
+
+                if (item?.driverName) {
+                    driverText = item.driverName;
+                    e.classList.add('text-success')
+                } else {
+                    e.classList.add('text-danger')
+                }
+                e.innerText = driverText;
+                e.classList.add('ms-4')
+                info.el.querySelector('div').append(e);
             },
             /*eventDidMount: function(info) {
                 let helpText = `${info.event.extendedProps.pickup_place} -> ${info.event.extendedProps.delivery_place}`;
@@ -195,7 +226,6 @@ export default class extends Controller {
             }
         }).render()
         ;
-
     }
 
     getVehicleEventSource() {
@@ -233,46 +263,16 @@ export default class extends Controller {
         return eventSources;
     }
 
-    getActiveEventSource() {
-        let eventSources = []
-        for (const inputEl of this.checkboxTargets) {
-            if (inputEl.checked) {
-                currentVehicleId = inputEl.value;
-                eventSources.push({
-                    url: inputEl.dataset.pickingUrl,
-                    failure: () => {alert('Errore! Non riesco a scaricare i ritiri.');},
-                    eventDataTransform: (m) => {
-                        m['title'] = `${m['pickupPlaceName']} < ${m['weight']}kg (${m['area']}mq) per ${m['deliveryPlaceName']}`
-                        if (m['express'] === true) {
-                            m['color'] = '#1c4971';
-                        }
-                        if (m['picked'] === true) {
-                            m['color'] = '#919191';
-                        }
-                    }
-                    // method: 'POST',
-                })
-                eventSources.push({
-                    url: inputEl.dataset.deliveringUrl,
-                    failure: () => {alert('Errore! Non riesco a scaricare le consegne.');},
-                    eventDataTransform: (m) => {
-                        m['title'] = `${m['weight']}kg (${m['area']}mq) > ${m['deliveryPlaceName']}`
-                        m['color'] = '#629677'
-                        if (m['delivered'] === true) {
-                            m['color'] = '#919191';
-                        }
-                    }
-                    // method: 'POST',
-                })
-
-                break;
-            }
-        }
-        return eventSources;
-    }
-
-
     renderCalendar(el) {
         this.calendarElTargetConnected(this.calendarElTarget);
+    }
+
+    parsePhpDate(phpObj) {
+        // 1. Prendi i primi 19 caratteri per tagliare i microsecondi (".000000")
+        // 2. Sostituisci lo spazio centrale con la "T" (standard ISO 8601)
+        // 3. Aggiungi "Z" alla fine se è UTC (o gestisci il timezone)
+        const isoString = phpObj.date.substring(0, 19).replace(' ', 'T') + 'Z';
+
+        return new Date(isoString);
     }
 }

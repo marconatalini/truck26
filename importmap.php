@@ -10,86 +10,45 @@
  *     be used as an "entrypoint" (and passed to the importmap() Twig function).
  *
  * The "importmap:require" command can be used to add new entries to this file.
+ *
+ * @return array<string, array{    // Import name as key, description of the imported file as value
+ *     path: string,               // Logical, relative or absolute path to the file
+ *     type?: 'js'|'css'|'json',   // Type of the file, defaults to 'js'
+ *     entrypoint?: bool,          // Whether the file is an entrypoint, for 'js' only
+ * }|array{
+ *     version: string,            // Version of the remote package
+ *     package_specifier?: string, // Remote "package-name/path" specifier, defaults to the import name
+ *     type?: 'js'|'css'|'json',
+ *     entrypoint?: bool,
+ * }>
  */
 return [
-    'app' => [
-        'path' => './assets/app.js',
-        'entrypoint' => true,
-    ],
-    'admin' => [
-        'path' => './assets/admin.js',
-        'entrypoint' => true,
-    ],
-    '@hotwired/stimulus' => [
-        'version' => '3.2.2',
-    ],
-    '@symfony/stimulus-bundle' => [
-        'path' => './vendor/symfony/stimulus-bundle/assets/dist/loader.js',
-    ],
-    'bootstrap' => [
-        'version' => '5.3.8',
-    ],
-    '@popperjs/core' => [
-        'version' => '2.11.8',
-    ],
-    'bootstrap/dist/css/bootstrap.min.css' => [
-        'version' => '5.3.8',
-        'type' => 'css',
-    ],
-    'fullcalendar' => [
-        'version' => '5.11.5',
-    ],
-    '@fullcalendar/core' => [
-        'version' => '5.11.5',
-    ],
-    'tslib' => [
-        'version' => '2.5.0',
-    ],
-    'preact' => [
-        'version' => '10.12.1',
-    ],
-    'preact/compat' => [
-        'version' => '10.12.1',
-    ],
-    '@fullcalendar/common' => [
-        'version' => '5.11.5',
-    ],
-    'preact/hooks' => [
-        'version' => '10.12.1',
-    ],
-    '@fullcalendar/daygrid' => [
-        'version' => '5.11.5',
-    ],
-    '@fullcalendar/bootstrap' => [
-        'version' => '5.11.5',
-    ],
-    '@fullcalendar/interaction' => [
-        'version' => '5.11.5',
-    ],
-    '@fullcalendar/core/locales/it' => [
-        'version' => '5.11.5',
-    ],
-    '@fullcalendar/list' => [
-        'version' => '5.11.5',
-    ],
-    '@fullcalendar/timegrid' => [
-        'version' => '5.11.5',
-    ],
-    '@fortawesome/fontawesome-free/css/all.css' => [
-        'version' => '7.2.0',
-        'type' => 'css',
-    ],
-    'leaflet' => [
-        'version' => '1.9.4',
-    ],
-    'leaflet/dist/leaflet.min.css' => [
-        'version' => '1.9.4',
-        'type' => 'css',
-    ],
-    'leaflet.icon.glyph' => [
-        'version' => '0.3.0',
-    ],
-    'chart.js' => [
-        'version' => '3.9.1',
-    ],
+    'app' => ['path' => './assets/app.js', 'entrypoint' => true],
+    'admin' => ['path' => './assets/admin.js', 'entrypoint' => true],
+    '@hotwired/stimulus' => ['version' => '3.2.2'],
+    '@symfony/stimulus-bundle' => ['path' => './vendor/symfony/stimulus-bundle/assets/dist/loader.js'],
+    'bootstrap' => ['version' => '5.3.8'],
+    '@popperjs/core' => ['version' => '2.11.8'],
+    'bootstrap/dist/css/bootstrap.min.css' => ['version' => '5.3.8', 'type' => 'css'],
+    'fullcalendar' => ['version' => '5.11.5'],
+    '@fullcalendar/core' => ['version' => '5.11.5'],
+    'tslib' => ['version' => '2.5.0'],
+    'preact' => ['version' => '10.12.1'],
+    'preact/compat' => ['version' => '10.12.1'],
+    '@fullcalendar/common' => ['version' => '5.11.5'],
+    'preact/hooks' => ['version' => '10.12.1'],
+    '@fullcalendar/daygrid' => ['version' => '5.11.5'],
+    '@fullcalendar/bootstrap' => ['version' => '5.11.5'],
+    '@fullcalendar/interaction' => ['version' => '5.11.5'],
+    '@fullcalendar/core/locales/it' => ['version' => '5.11.5'],
+    '@fullcalendar/list' => ['version' => '5.11.5'],
+    '@fullcalendar/timegrid' => ['version' => '5.11.5'],
+    '@fortawesome/fontawesome-free/css/all.css' => ['version' => '7.2.0', 'type' => 'css'],
+    'leaflet' => ['version' => '1.9.4'],
+    'leaflet/dist/leaflet.min.css' => ['version' => '1.9.4', 'type' => 'css'],
+    'leaflet.icon.glyph' => ['version' => '0.3.0'],
+    'chart.js' => ['version' => '3.9.1'],
+    '@fullcalendar/moment-timezone' => ['version' => '5.11.5'],
+    'moment' => ['version' => '2.29.4'],
+    'moment-timezone' => ['version' => '0.5.43'],
 ];

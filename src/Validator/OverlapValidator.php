@@ -37,8 +37,8 @@ final class OverlapValidator extends ConstraintValidator
             return;
         }
 
-        if (null !== $this->driverLogRepository->findOverlapsLog($value)) {
-            $this->context->buildViolation($constraint->message)
+        if (null !== $found = $this->driverLogRepository->findDriverOverlapsLog($value)) {
+            $this->context->buildViolation($constraint->driver_message)
                 ->setParameter('{{ driver }}', $value->getDriver())
                 ->setParameter('{{ category }}', $value->getCategory())
                 ->setParameter('{{ startDate }}', $value->getStartDate()->format('d.m.Y'))
@@ -46,5 +46,17 @@ final class OverlapValidator extends ConstraintValidator
                 ->addViolation()
             ;
         }
+
+        if (null !== $found = $this->driverLogRepository->findVehicleOverlapsLog($value)) {
+            $this->context->buildViolation($constraint->vehicle_message)
+                ->setParameter('{{ vehicle }}', $value->getVehicle())
+                ->setParameter('{{ startDate }}', $found->getStartDate()->format('d.m.Y'))
+                ->setParameter('{{ endDate }}', $found->getEndDate()->format('d.m.Y'))
+                ->atPath('driverLog.startDate')
+                ->addViolation()
+            ;
+        }
+
+
     }
 }

@@ -52,6 +52,7 @@ class MissionRepository extends ServiceEntityRepository
     {
         return $this->createQueryBuilder('m')
             ->andWhere('m.pickingVehicle = :vehicle AND m.picked = false')
+            ->orWhere('m.pickingVehicle = :vehicle AND m.picked = true AND m.deliveringVehicle IS NULL')
             ->orWhere('m.deliveringVehicle = :vehicle AND m.delivered = false')
             ->setParameter('vehicle', $vehicle)
             ->orderBy('m.scheduled_at', 'ASC')

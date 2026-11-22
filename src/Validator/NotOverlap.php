@@ -9,7 +9,8 @@ use Symfony\Component\Validator\Constraint;
 final class NotOverlap extends Constraint
 {
 //    public string $message = '{{ driver }} has already a {{ category }} log in the date {{ startDate }}';
-    public string $message = 'log.overlap.error';
+    public string $driver_message = 'log.driver.overlap.error';
+    public string $vehicle_message = 'log.vehicle.overlap.error';
 
     // You can use #[HasNamedArguments] to make some constraint options required.
     // All configurable options must be passed to the constructor.

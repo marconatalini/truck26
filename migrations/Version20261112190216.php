@@ -27,6 +27,7 @@ final class Version20261112190216 extends AbstractMigration
         $this->addSql('INSERT INTO setting (key, value, default_value, description) VALUES (\'CALENDAR_SLOT_MIN_TIME\' ,\'07:00:00\',\'07:00:00\',\'Prima ora del giorno in HH:MM:SS (24h)\')');
         $this->addSql('INSERT INTO setting (key, value, default_value, description) VALUES (\'CALENDAR_SLOT_MAX_TIME\' ,\'19:00:00\',\'19:00:00\',\'Ultima ora del giorno in HH:MM:SS (24h)\')');
         $this->addSql('INSERT INTO setting (key, value, default_value, description) VALUES (\'CALENDAR_EVENT_DURATION\',\'00:15:00\',\'00:15:00\',\'Durata missione in HH:MM:SS\')');
+        $this->addSql('INSERT INTO setting (key, value, default_value, description) VALUES (\'CALENDAR_HIDDEN_DAYS\',\'0\',\'0\',\'Giorni della settimana non visibili da 0 a 6 separati da virgola. (0 = domenica)\')');
     }
 
     public function down(Schema $schema): void

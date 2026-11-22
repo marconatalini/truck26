@@ -271,7 +271,6 @@ class MissionCrudController extends AbstractCrudController
     public function management(
         MissionRepository $missionRepository,
         VehicleRepository $vehicleRepository,
-        SettingRepository $settingRepository,
     ): Response
     {
         $missionsStart = $missionRepository->findMissionToManagedByStatus(MissionState::START);

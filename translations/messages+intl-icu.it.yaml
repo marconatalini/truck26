@@ -1,5 +1,6 @@
 VEHICLES: AUTOMEZZI
 VEHICLE: AUTOMEZZO
+DRIVER: AUTISTA
 I:
     not:
         know: 'No, non saprei...'
